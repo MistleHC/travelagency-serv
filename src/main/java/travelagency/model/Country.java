@@ -1,11 +1,11 @@
 package travelagency.model;
 
-public class TourType {
+public class Country {
 
     private Long id;
     private String name;
 
-    public TourType(Long id, String name) {
+    public Country(Long id, String name) {
         this.id = id;
         this.name = name;
     }

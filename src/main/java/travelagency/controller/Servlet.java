@@ -1,6 +1,7 @@
 package travelagency.controller;
 
 import travelagency.controller.command.*;
+import travelagency.service.impl.TourServiceImpl;
 import travelagency.service.impl.UserServiceImpl;
 
 import javax.servlet.ServletConfig;
@@ -23,6 +24,7 @@ public class Servlet extends HttpServlet {
         commands.put("login", new LoginCommand(new UserServiceImpl()));
         commands.put("registration", new RegistrationCommand(new UserServiceImpl()));
         commands.put("exception" , new ExceptionCommand());
+        commands.put("home", new HomeCommand(new TourServiceImpl()));
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

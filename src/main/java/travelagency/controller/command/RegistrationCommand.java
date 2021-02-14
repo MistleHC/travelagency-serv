@@ -1,6 +1,5 @@
 package travelagency.controller.command;
 
-import travelagency.exceptions.AuthorizationException;
 import travelagency.model.User;
 import travelagency.model.enums.UserRoles;
 import travelagency.service.UserService;
