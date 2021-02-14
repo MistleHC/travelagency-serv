@@ -48,9 +48,9 @@ public class UserDaoImpl implements UserDao {
             connection.setAutoCommit(false);
 
             int affectedRows = st.executeUpdate(String.format(SQLConstants.INSERT_USER_WITH_NAME_EMAIL_PW,
-                                                                        user.getEmail(),
-                                                                        user.getName(),
-                                                                        user.getPassword()));
+                                                            user.getEmail(),
+                                                            user.getName(),
+                                                            AESEncryptor.encrypt(user.getPassword(), "travel")));
 
             User insertedUser = findByEmail(user.getEmail());
 
