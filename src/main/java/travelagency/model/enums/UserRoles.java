@@ -7,24 +7,28 @@ public enum UserRoles {
     GUEST(Arrays.asList(
             "/",
             "/login",
-            "/registration"
+            "/registration",
+            "/home"
     )),
     CUSTOMER(Arrays.asList(
             "/",
             "/logout",
-            "/profile"
+            "/profile",
+            "/home"
     )),
     MANAGER(Arrays.asList(
             "/",
             "/logout",
             "/profile",
-            "/manage"
+            "/manage",
+            "/home"
     )),
     ADMIN(Arrays.asList(
             "/",
             "/logout",
             "/profile",
-            "/manage"
+            "/manage",
+            "/home"
     ));
 
     private final List<String> authorities;

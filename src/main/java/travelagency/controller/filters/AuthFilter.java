@@ -30,7 +30,7 @@ public class AuthFilter implements Filter  {
 
         if (Objects.isNull(user)) {
             if (!UserRoles.GUEST.getAuthorities().contains(path)) {
-                throw new AuthorizationException("Authorized action " + path);
+                throw new AuthorizationException("Unauthorized action " + path);
             } else {
                 filterChain.doFilter(request,response);
             }
@@ -38,7 +38,7 @@ public class AuthFilter implements Filter  {
         }
 
         if (!UserRoles.valueOf(user.getRole()).getAuthorities().contains(path)) {
-            throw new AuthorizationException("Authorized action");
+            throw new AuthorizationException("Unauthorized action");
         } else {
             filterChain.doFilter(request,response);
         }

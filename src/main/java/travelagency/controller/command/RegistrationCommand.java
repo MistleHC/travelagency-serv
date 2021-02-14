@@ -51,6 +51,6 @@ public class RegistrationCommand implements Command  {
 
         System.out.println("Logged in user is: " + request.getSession().getAttribute("authUser").toString());
 
-        return "/registration.jsp";
+        return "redirect:/home";
     }
 }

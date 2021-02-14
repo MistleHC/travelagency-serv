@@ -1,7 +1,6 @@
 package travelagency.controller.command;
 
 import travelagency.model.User;
-import travelagency.model.enums.UserRoles;
 import travelagency.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +33,6 @@ public class LoginCommand implements Command {
 
         System.out.println("Logged in user is: " + request.getSession().getAttribute("authUser").toString());
 
-        return "/login.jsp";
+        return "redirect:/home";
     }
 }
