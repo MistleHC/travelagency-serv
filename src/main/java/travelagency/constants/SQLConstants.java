@@ -5,19 +5,28 @@ public class SQLConstants {
     //UserDao Queries
     //=================================================================================================================
 
-    public static final String GET_USER_BY_EMAIL = "SELECT id, email, name, password, aboutme, fullname " +
-                                                   "FROM users " +
-                                                   "WHERE email LIKE '%s'";
+    public static final String GET_USER_BY_EMAIL =
+                    "SELECT id, email, name, password, aboutme, fullname " +
+                    "FROM users " +
+                    "WHERE email LIKE '%s'";
 
-    public static final String GET_USER_ROLE_BY_USER_ID = "SELECT name " +
-                                                          "FROM user_roles AS u INNER JOIN roles AS r ON u.role_id = r.id " +
-                                                          "WHERE u.user_id = %s";
+    public static final String GET_USER_ROLE_BY_USER_ID =
+                    "SELECT name " +
+                    "FROM user_roles AS u INNER JOIN roles AS r ON u.role_id = r.id " +
+                    "WHERE u.user_id = %s";
 
-    public static final String INSERT_USER_WITH_NAME_EMAIL_PW = "INSERT INTO users (email, name, password) " +
-                                                                "VALUES ('%1$s', '%2$s', '%3$s')";
+    public static final String INSERT_USER_WITH_NAME_EMAIL_PW =
+                    "INSERT INTO users (email, name, password) " +
+                    "VALUES ('%1$s', '%2$s', '%3$s')";
 
-    public static final String INSERT_ROLE_FOR_USER = "INSERT INTO user_roles (user_id, role_id) " +
-                                                      "VALUES (%1$s, %2$s)";
+    public static final String INSERT_ROLE_FOR_USER =
+                    "INSERT INTO user_roles (user_id, role_id) " +
+                    "VALUES (%1$s, %2$s)";
+
+    public static final String UPDATE_USER_ADDITIONAL_INFO =
+                    "UPDATE users " +
+                    "SET aboutme = '%1$s', fullname = '%2$s' " +
+                    "WHERE id = %3$s;";
 
     //=================================================================================================================
     //OrderDao Queries
@@ -25,13 +34,27 @@ public class SQLConstants {
 
     public static final String GET_ORDERS_BY_CUSTOMER_ID =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot, " +
-                    "ord.id AS order_id, ord.customer_id AS order_customer_id, st.id AS status_id, st.title AS status_title " +
+                        "ord.id AS order_id, ord.customer_id AS order_customer_id, st.id AS status_id, st.title AS status_title, " +
+                        "us.id AS user_id, us.email AS user_email, us.name AS user_name " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
                     "INNER JOIN orders AS ord ON t.id = ord.tour_id " +
                     "INNER JOIN statuses AS st ON ord.status_id = st.id " +
+                    "INNER JOIN users AS us ON ord.customer_id = us.id " +
                     "WHERE ord.customer_id = %s;";
+
+    public static final String GET_ORDERS_BY_STATUS_TITLE =
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot, " +
+                        "ord.id AS order_id, ord.customer_id AS order_customer_id, st.id AS status_id, st.title AS status_title, " +
+                        "us.id AS user_id, us.email AS user_email, us.name AS user_name " +
+                    "FROM tours AS t " +
+                    "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
+                    "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
+                    "INNER JOIN orders AS ord ON t.id = ord.tour_id " +
+                    "INNER JOIN statuses AS st ON ord.status_id = st.id " +
+                    "INNER JOIN users AS us ON ord.customer_id = us.id " +
+                    "WHERE st.title LIKE '%s';";
 
     public static final String INSERT_NEW_ORDER =
                     "INSERT INTO orders (customer_id, tour_id, status_id) " +
@@ -40,6 +63,11 @@ public class SQLConstants {
     public static final String DELETE_ORDER_BY_ID =
                     "DELETE FROM orders " +
                     "WHERE id = %s;";
+
+    public static final String UPDATE_ORDER_STATUS =
+                    "UPDATE orders " +
+                    "SET status_id = %1$s " +
+                    "WHERE id = %2$s;";
 
     //=================================================================================================================
     //TourDao Queries

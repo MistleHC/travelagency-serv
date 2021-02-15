@@ -30,7 +30,8 @@ public class Servlet extends HttpServlet {
         commands.put("tour/de-hot", new TourActionCommand(new TourServiceImpl()));
         commands.put("order", new OrderCommand(new OrderServiceImpl()));
         commands.put("order/delete", new OrderCommand(new OrderServiceImpl()));
-        commands.put("profile", new ProfileCommand(new OrderServiceImpl()));
+        commands.put("profile", new ProfileCommand(new OrderServiceImpl(), new UserServiceImpl()));
+        commands.put("manage", new ManagementCommand(new OrderServiceImpl()));
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

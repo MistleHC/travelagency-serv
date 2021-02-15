@@ -6,6 +6,7 @@ import travelagency.dao.mapper.TourMapper;
 import travelagency.model.Order;
 import travelagency.model.Status;
 import travelagency.model.Tour;
+import travelagency.model.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,7 +24,16 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<Order> findAllByStatusTitle(String statusTitle) {
-        return null;
+        List<Order> orders = new ArrayList<>();
+
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_ORDERS_BY_STATUS_TITLE, statusTitle));
+
+            return MapOrderRelativeEntities(orders, rs);
+        } catch (SQLException e) {
+            System.err.println("Couldn't get pending orders " + e.getMessage());
+            return orders;
+        }
     }
 
     @Override
@@ -33,28 +43,56 @@ public class OrderDaoImpl implements OrderDao {
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_ORDERS_BY_CUSTOMER_ID, customerId));
 
-            TourMapper tourMapper = new TourMapper();
-
-            while (rs.next()) {
-                Tour tour = tourMapper.extractFromResultSet(rs);
-
-                Status status = new Status(rs.getLong("status_id"), rs.getString("status_title"));
-
-                Order order = Order.newBuilder()
-                        .setId(rs.getLong("order_id"))
-                        .setCustomerId(rs.getLong("order_customer_id"))
-                        .setTour(tour)
-                        .setStatus(status)
-                        .build();
-
-                orders.add(order);
-            }
-
-            return orders;
+            return MapOrderRelativeEntities(orders, rs);
         } catch (SQLException e) {
             System.err.println("Couldn't get user orders " + e.getMessage());
             return orders;
         }
+    }
+
+    @Override
+    public boolean updateOrderStatus(Long orderId, Long statusId) {
+        try (Statement st = connection.createStatement()) {
+            int affectedRows = st.executeUpdate(String.format(SQLConstants.UPDATE_ORDER_STATUS,
+                                                                            statusId,
+                                                                            orderId));
+            if (affectedRows == 0) {
+                throw new SQLException("Updating order status failed, no rows affected.");
+            }
+
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Couldn't update order " + e.getMessage());
+            return false;
+        }
+    }
+
+    private List<Order> MapOrderRelativeEntities(List<Order> orders, ResultSet rs) throws SQLException {
+        TourMapper tourMapper = new TourMapper();
+
+        while (rs.next()) {
+            Tour tour = tourMapper.extractFromResultSet(rs);
+
+            Status status = new Status(rs.getLong("status_id"), rs.getString("status_title"));
+
+            User user = User.newBuilder()
+                    .setId(rs.getLong("user_id"))
+                    .setEmail(rs.getString("user_email"))
+                    .setName(rs.getString("user_name"))
+                    .build();
+
+            Order order = Order.newBuilder()
+                    .setId(rs.getLong("order_id"))
+                    .setCustomerId(rs.getLong("order_customer_id"))
+                    .setCustomer(user)
+                    .setTour(tour)
+                    .setStatus(status)
+                    .build();
+
+            orders.add(order);
+        }
+
+        return orders;
     }
 
     @Override

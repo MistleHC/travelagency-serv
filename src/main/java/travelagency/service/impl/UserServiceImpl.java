@@ -29,4 +29,11 @@ public class UserServiceImpl implements UserService {
 
         return user;
     }
+
+    @Override
+    public boolean updateUser(User user) {
+        try (UserDao dao = daoFactory.createUserDao()) {
+            return dao.update(user);
+        }
+    }
 }

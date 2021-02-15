@@ -36,12 +36,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean setPaid(long orderId) {
-        return false;
+        try (OrderDao orderDao = daoFactory.createOrderDao()) {
+            return orderDao.updateOrderStatus(orderId, (long) 2);
+        }
     }
 
     @Override
     public boolean setDecline(long orderId) {
-        return false;
+        try (OrderDao orderDao = daoFactory.createOrderDao()) {
+            return orderDao.updateOrderStatus(orderId, (long) 3);
+        }
     }
 
     @Override
@@ -53,6 +57,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getNewOrders() {
-        return null;
+        try (OrderDao orderDao = daoFactory.createOrderDao()) {
+            return orderDao.findAllByStatusTitle("Pending");
+        }
     }
 }

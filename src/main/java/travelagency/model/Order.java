@@ -5,9 +5,10 @@ import java.util.Objects;
 public class Order {
 
     private Long id;
-    private Long customerId;
+    private User customer;
     private Tour tour;
     private Status status;
+    private Long customerId;
 
     private Order() { }
 
@@ -28,6 +29,12 @@ public class Order {
 
         public Order.Builder setCustomerId(Long customerId) {
             Order.this.customerId = customerId;
+
+            return this;
+        }
+
+        public Order.Builder setCustomer(User customer) {
+            Order.this.customer = customer;
 
             return this;
         }
@@ -53,8 +60,8 @@ public class Order {
         return id;
     }
 
-    public Long getCustomer() {
-        return customerId;
+    public User getCustomer() {
+        return customer;
     }
 
     public Tour getTour() {
@@ -65,27 +72,29 @@ public class Order {
         return status;
     }
 
+    public Long getCustomerId() { return customerId; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return Objects.equals(id, order.id) &&
-                Objects.equals(customerId, order.customerId) &&
+                Objects.equals(customer, order.customer) &&
                 Objects.equals(tour, order.tour) &&
                 Objects.equals(status, order.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, tour, status);
+        return Objects.hash(id, customer, tour, status);
     }
 
     @Override
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", customer=" + customerId +
+                ", customer=" + customer +
                 ", tour=" + tour +
                 ", status=" + status +
                 '}';

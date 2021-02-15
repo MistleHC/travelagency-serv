@@ -84,8 +84,21 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean update(User entity) {
-        return false;
+    public boolean update(User user) {
+        try (Statement st = connection.createStatement()) {
+            int affectedRows = st.executeUpdate(String.format(SQLConstants.UPDATE_USER_ADDITIONAL_INFO,
+                                                                                user.getAboutMe(),
+                                                                                user.getFullName(),
+                                                                                user.getId()));
+            if (affectedRows == 0) {
+                throw new SQLException("Updating user details failed, no rows affected.");
+            }
+
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Couldn't update user " + e.getMessage());
+            return false;
+        }
     }
 
     @Override

@@ -7,40 +7,40 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="<c:url value="app/home"/>">Home</a>
+                <a class="nav-link" href="<c:url value="${pageContext.request.contextPath}/app/home"/>">Home</a>
             </li>
             <c:if test="${sessionScope.authUser == null}">
                 <li class="nav-item active">
-                    <a class="nav-link" href="<c:url value="app/registration"/>">Register</a>
+                    <a class="nav-link" href="<c:url value="${pageContext.request.contextPath}/app/registration"/>">Register</a>
                 </li>
             </c:if>
             <c:if test="${sessionScope.authUser == null}">
                 <li class="nav-item active">
-                    <a class="nav-link" href="<c:url value="app/login"/>">Login</a>
+                    <a class="nav-link" href="<c:url value="${pageContext.request.contextPath}/app/login"/>">Login</a>
                 </li>
             </c:if>
             <c:if test="${sessionScope.authUser != null}">
                 <c:choose>
                     <c:when test="${sessionScope.authUser.role == 'MANAGER'}">
                         <li class="nav-item active">
-                            <a class="nav-link" href="<c:url value="app/manage"/>">Management</a>
+                            <a class="nav-link" href="<c:url value="${pageContext.request.contextPath}/app/manage"/>">Management</a>
                         </li>
                     </c:when>
                     <c:when test="${sessionScope.authUser.role == 'ADMIN'}">
                         <li class="nav-item active">
-                            <a class="nav-link" href="<c:url value="app/manage"/>">Management</a>
+                            <a class="nav-link" href="<c:url value="${pageContext.request.contextPath}/app/manage"/>">Management</a>
                         </li>
                     </c:when>
                 </c:choose>
             </c:if>
             <c:if test="${sessionScope.authUser != null}">
                 <li class="nav-item active">
-                    <a class="nav-link" href="<c:url value="app/profile"/>">Profile</a>
+                    <a class="nav-link" href="<c:url value="${pageContext.request.contextPath}/app/profile"/>">Profile</a>
                 </li>
             </c:if>
             <c:if test="${sessionScope.authUser != null}">
                 <li class="nav-item active">
-                    <a class="nav-link" href="<c:url value="app/logout"/>">Logout</a>
+                    <a class="nav-link" href="<c:url value="${pageContext.request.contextPath}/app/logout"/>">Logout</a>
                 </li>
             </c:if>
         </ul>

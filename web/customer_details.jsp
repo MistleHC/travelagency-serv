@@ -76,7 +76,7 @@
     <!-- Modal - Tour creation -->
     <div class="modal fade" id="modaledit">
         <div class="modal-dialog modal-dialog-centered">
-            <form action="${pageContext.request.contextPath}/profile/edit" method="post">
+            <form action="${pageContext.request.contextPath}/app/profile" method="post">
                 <div class="modal-content">
                     <!-- Modal Header -->
                     <div class="modal-header">
