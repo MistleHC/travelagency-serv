@@ -15,7 +15,8 @@ public enum UserRoles {
             "/logout",
             "/profile",
             "/home",
-            "/order"
+            "/order",
+            "/order/delete"
     )),
     MANAGER(Arrays.asList(
             "/",
@@ -24,7 +25,8 @@ public enum UserRoles {
             "/manage",
             "/home",
             "/tour/hot",
-            "/tour/de-hot"
+            "/tour/de-hot",
+            "/order/delete"
     )),
     ADMIN(Arrays.asList(
             "/",
@@ -35,7 +37,8 @@ public enum UserRoles {
             "/tour/create",
             "/tour/delete",
             "/tour/hot",
-            "/tour/de-hot"
+            "/tour/de-hot",
+            "/order/delete"
     ));
 
     private final List<String> authorities;

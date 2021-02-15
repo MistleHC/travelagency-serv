@@ -29,6 +29,8 @@ public class Servlet extends HttpServlet {
         commands.put("tour/hot", new TourActionCommand(new TourServiceImpl()));
         commands.put("tour/de-hot", new TourActionCommand(new TourServiceImpl()));
         commands.put("order", new OrderCommand(new OrderServiceImpl()));
+        commands.put("order/delete", new OrderCommand(new OrderServiceImpl()));
+        commands.put("profile", new ProfileCommand(new OrderServiceImpl()));
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

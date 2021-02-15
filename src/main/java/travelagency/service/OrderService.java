@@ -5,10 +5,10 @@ import travelagency.model.Order;
 import java.util.List;
 
 public interface OrderService {
-    void createOrder(long tourId, long userId);
-    void deleteOrder(long orderId);
-    void setPaid(long orderId);
-    void setDecline(long orderId);
+    boolean createOrder(long tourId, long userId);
+    boolean deleteOrder(long orderId);
+    boolean setPaid(long orderId);
+    boolean setDecline(long orderId);
     List<Order> getAllByUserId(Long userId);
     List<Order> getNewOrders();
 }

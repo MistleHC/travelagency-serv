@@ -20,6 +20,28 @@ public class SQLConstants {
                                                       "VALUES (%1$s, %2$s)";
 
     //=================================================================================================================
+    //OrderDao Queries
+    //=================================================================================================================
+
+    public static final String GET_ORDERS_BY_CUSTOMER_ID =
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot, " +
+                    "ord.id AS order_id, ord.customer_id AS order_customer_id, st.id AS status_id, st.title AS status_title " +
+                    "FROM tours AS t " +
+                    "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
+                    "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
+                    "INNER JOIN orders AS ord ON t.id = ord.tour_id " +
+                    "INNER JOIN statuses AS st ON ord.status_id = st.id " +
+                    "WHERE ord.customer_id = %s;";
+
+    public static final String INSERT_NEW_ORDER =
+                    "INSERT INTO orders (customer_id, tour_id, status_id) " +
+                    "VALUES (%1$s, %2$s, %3$s);";
+
+    public static final String DELETE_ORDER_BY_ID =
+                    "DELETE FROM orders " +
+                    "WHERE id = %s;";
+
+    //=================================================================================================================
     //TourDao Queries
     //=================================================================================================================
 
@@ -76,14 +98,6 @@ public class SQLConstants {
     public static final String DELETE_TOUR_BY_ID =
                     "DELETE FROM tours " +
                     "WHERE id = %s;";
-
-    //=================================================================================================================
-    //OrderDao Queries
-    //=================================================================================================================
-
-    public static final String INSERT_NEW_ORDER =
-                    "INSERT INTO orders (customer_id, tour_id, status_id) " +
-                    "VALUES (%1$s, %2$s, %3$s);";
 
     //=================================================================================================================
     //CountryDao Queries

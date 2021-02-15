@@ -2,11 +2,16 @@ package travelagency.dao.impl;
 
 import travelagency.constants.SQLConstants;
 import travelagency.dao.OrderDao;
+import travelagency.dao.mapper.TourMapper;
 import travelagency.model.Order;
+import travelagency.model.Status;
+import travelagency.model.Tour;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDaoImpl implements OrderDao {
@@ -23,7 +28,33 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<Order> findAllByCustomerId(Long customerId) {
-        return null;
+        List<Order> orders = new ArrayList<>();
+
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_ORDERS_BY_CUSTOMER_ID, customerId));
+
+            TourMapper tourMapper = new TourMapper();
+
+            while (rs.next()) {
+                Tour tour = tourMapper.extractFromResultSet(rs);
+
+                Status status = new Status(rs.getLong("status_id"), rs.getString("status_title"));
+
+                Order order = Order.newBuilder()
+                        .setId(rs.getLong("order_id"))
+                        .setCustomerId(rs.getLong("order_customer_id"))
+                        .setTour(tour)
+                        .setStatus(status)
+                        .build();
+
+                orders.add(order);
+            }
+
+            return orders;
+        } catch (SQLException e) {
+            System.err.println("Couldn't get user orders " + e.getMessage());
+            return orders;
+        }
     }
 
     @Override
@@ -61,7 +92,18 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        try (Statement st = connection.createStatement()){
+            int affectedRows = st.executeUpdate(String.format(SQLConstants.DELETE_ORDER_BY_ID, id));
+
+            if (affectedRows == 0) {
+                throw new SQLException("Deleting order failed, no rows affected.");
+            }
+
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Couldn't delete order " + e.getMessage());
+            return false;
+        }
     }
 
     @Override

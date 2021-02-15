@@ -13,7 +13,7 @@ public class OrderServiceImpl implements OrderService {
     DaoFactory daoFactory = DaoFactory.getInstance();
 
     @Override
-    public void createOrder(long tourId, long userId) {
+    public boolean createOrder(long tourId, long userId) {
         try (OrderDao orderDao = daoFactory.createOrderDao();
              TourDao tourDao = daoFactory.createTourDao()) {
 
@@ -23,28 +23,32 @@ public class OrderServiceImpl implements OrderService {
                     .setStatus(new Status((long) 1, "Pending"))
                     .build();
 
-            orderDao.create(order);
+            return orderDao.create(order);
         }
     }
 
     @Override
-    public void deleteOrder(long orderId) {
-
+    public boolean deleteOrder(long orderId) {
+        try (OrderDao orderDao = daoFactory.createOrderDao()) {
+            return orderDao.delete(orderId);
+        }
     }
 
     @Override
-    public void setPaid(long orderId) {
-
+    public boolean setPaid(long orderId) {
+        return false;
     }
 
     @Override
-    public void setDecline(long orderId) {
-
+    public boolean setDecline(long orderId) {
+        return false;
     }
 
     @Override
     public List<Order> getAllByUserId(Long userId) {
-        return null;
+        try (OrderDao orderDao = daoFactory.createOrderDao()) {
+            return orderDao.findAllByCustomerId(userId);
+        }
     }
 
     @Override

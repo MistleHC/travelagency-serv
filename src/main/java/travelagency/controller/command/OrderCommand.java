@@ -16,8 +16,13 @@ public class OrderCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         String newOrderTourId = request.getParameter("tourid");
+        String deleteOrderId = request.getParameter("deleteOrderId");
 
         User user = (User) request.getSession().getAttribute("authUser");
+
+        if (Objects.nonNull(deleteOrderId) && !deleteOrderId.equals("")) {
+            orderService.deleteOrder(Long.parseLong(deleteOrderId));
+        }
 
         if (Objects.nonNull(newOrderTourId) && !newOrderTourId.equals("")) {
             orderService.createOrder(Long.parseLong(newOrderTourId), user.getId());
