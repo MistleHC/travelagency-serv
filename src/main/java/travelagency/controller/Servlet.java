@@ -1,8 +1,7 @@
 package travelagency.controller;
 
 import travelagency.controller.command.*;
-import travelagency.service.impl.TourServiceImpl;
-import travelagency.service.impl.UserServiceImpl;
+import travelagency.service.impl.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -24,7 +23,12 @@ public class Servlet extends HttpServlet {
         commands.put("login", new LoginCommand(new UserServiceImpl()));
         commands.put("registration", new RegistrationCommand(new UserServiceImpl()));
         commands.put("exception" , new ExceptionCommand());
-        commands.put("home", new HomeCommand(new TourServiceImpl()));
+        commands.put("home", new HomeCommand(new TourServiceImpl(), new CountryServiceImpl(), new HotelServiceImpl()));
+        commands.put("tour/create", new TourActionCommand(new TourServiceImpl()));
+        commands.put("tour/delete", new TourActionCommand(new TourServiceImpl()));
+        commands.put("tour/hot", new TourActionCommand(new TourServiceImpl()));
+        commands.put("tour/de-hot", new TourActionCommand(new TourServiceImpl()));
+        commands.put("order", new OrderCommand(new OrderServiceImpl()));
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="<c:url value="/"/>">Home</a>
+                <a class="nav-link" href="<c:url value="app/home"/>">Home</a>
             </li>
             <c:if test="${sessionScope.authUser == null}">
                 <li class="nav-item active">

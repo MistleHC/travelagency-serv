@@ -14,21 +14,28 @@ public enum UserRoles {
             "/",
             "/logout",
             "/profile",
-            "/home"
+            "/home",
+            "/order"
     )),
     MANAGER(Arrays.asList(
             "/",
             "/logout",
             "/profile",
             "/manage",
-            "/home"
+            "/home",
+            "/tour/hot",
+            "/tour/de-hot"
     )),
     ADMIN(Arrays.asList(
             "/",
             "/logout",
             "/profile",
             "/manage",
-            "/home"
+            "/home",
+            "/tour/create",
+            "/tour/delete",
+            "/tour/hot",
+            "/tour/de-hot"
     ));
 
     private final List<String> authorities;

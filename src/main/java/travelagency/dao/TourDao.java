@@ -1,14 +1,16 @@
 package travelagency.dao;
 
 import travelagency.model.Tour;
+import travelagency.model.TourType;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TourDao extends GenericDao<Tour> {
-    Optional<Tour> findById(Long id);
+    Tour findById(Long id);
     List<Tour> findAllByCountry(String country);
     List<Tour> findAllByHotelType_Name(String hotel);
     List<Tour> findAllByCountryAndHotelType_Name(String country, String hotel);
-    boolean setHot(Long id,Boolean condition);
+    List<TourType> getTourTypes();
+    TourType getTourTypeByName(String name);
+    boolean setHot(Long id, Boolean condition);
 }

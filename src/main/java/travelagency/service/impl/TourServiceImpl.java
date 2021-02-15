@@ -3,8 +3,8 @@ package travelagency.service.impl;
 import travelagency.controller.dto.TourCreationDto;
 import travelagency.controller.dto.TourFilterDto;
 import travelagency.dao.DaoFactory;
+import travelagency.dao.HotelDao;
 import travelagency.dao.TourDao;
-import travelagency.dao.UserDao;
 import travelagency.model.Tour;
 import travelagency.model.TourType;
 import travelagency.service.TourService;
@@ -12,7 +12,6 @@ import travelagency.service.TourService;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class TourServiceImpl implements TourService {
     DaoFactory daoFactory = DaoFactory.getInstance();
@@ -50,27 +49,53 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public List<TourType> getTourTypes() {
-        return null;
+        try (TourDao tourDao = daoFactory.createTourDao()) {
+            return tourDao.getTourTypes();
+        }
     }
 
     @Override
     public void setHot(Long tourId) {
-
+        try (TourDao tourDao = daoFactory.createTourDao()) {
+            tourDao.setHot(tourId, true);
+        }
     }
 
     @Override
     public void setNotHot(Long tourId) {
-
+        try (TourDao tourDao = daoFactory.createTourDao()) {
+            tourDao.setHot(tourId, false);
+        }
     }
 
     @Override
     public void deleteById(Long tourId) {
-
+        try (TourDao tourDao = daoFactory.createTourDao()) {
+            tourDao.delete(tourId);
+        }
     }
 
     @Override
-    public Tour saveNewTour(TourCreationDto tourCreationDto) {
-        return null;
+    public boolean saveNewTour(TourCreationDto tourCreationDto) {
+        try (TourDao tourDao = daoFactory.createTourDao();
+             HotelDao hotelDao = daoFactory.createHotelDao()) {
+
+            Tour tour = Tour.newBuilder()
+                    .setName(tourCreationDto.getTourName())
+                    .setDescription(tourCreationDto.getTourDescription())
+                    .setCountry(tourCreationDto.getTourCountry())
+                    .setPeoples(tourCreationDto.getTourSize())
+                    .setPrice(tourCreationDto.getTourPrice())
+                    .setHot(false)
+                    .setHotelType(hotelDao.getByName(tourCreationDto.getTourHotel()))
+                    .setTourType(tourDao.getTourTypeByName(tourCreationDto.getTourType()))
+                    .build();
+
+            return tourDao.create(tour);
+        } catch (Exception exception) {
+            System.err.println("Error with AutoClosable at TourService!");
+            return false;
+        }
     }
 
     private List<Tour> filterTours(List<Tour> list, TourFilterDto filter) {

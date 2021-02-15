@@ -15,5 +15,5 @@ public interface TourService {
     void setHot(Long tourId);
     void setNotHot(Long tourId);
     void deleteById(Long tourId);
-    Tour saveNewTour(TourCreationDto tourCreationDto);
+    boolean saveNewTour(TourCreationDto tourCreationDto);
 }

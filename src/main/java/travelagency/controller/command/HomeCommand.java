@@ -1,15 +1,21 @@
 package travelagency.controller.command;
 
 import travelagency.controller.dto.TourFilterDto;
+import travelagency.service.CountryService;
+import travelagency.service.HotelService;
 import travelagency.service.TourService;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class HomeCommand implements Command {
     private final TourService tourService;
+    private final CountryService countryService;
+    private final HotelService hotelService;
 
-    public HomeCommand(TourService tourService) {
+    public HomeCommand(TourService tourService, CountryService countryService, HotelService hotelService) {
         this.tourService = tourService;
+        this.countryService = countryService;
+        this.hotelService = hotelService;
     }
 
     @Override
@@ -30,16 +36,10 @@ public class HomeCommand implements Command {
         tourFilterDto.changeDefaultValues();
 
         request.getSession().setAttribute("tours", tourService.getAllByFilter(tourFilterDto));
+        request.getSession().setAttribute("countries", countryService.getAll());
+        request.getSession().setAttribute("hotels", hotelService.getAll());
+        request.getSession().setAttribute("tourTypes", tourService.getTourTypes());
 
-
-
-
-
-
-
-
-
-
-        return "/index.jsp";
+        return "/home_page.jsp";
     }
 }

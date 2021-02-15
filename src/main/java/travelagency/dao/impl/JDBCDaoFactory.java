@@ -1,8 +1,6 @@
 package travelagency.dao.impl;
 
-import travelagency.dao.TourDao;
-import travelagency.dao.UserDao;
-import travelagency.dao.DaoFactory;
+import travelagency.dao.*;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -28,4 +26,13 @@ public class JDBCDaoFactory extends DaoFactory {
     public TourDao createTourDao() {
         return new TourDaoImpl(getConnection());
     }
+
+    @Override
+    public CountryDao createCountryDao() { return new CountryDaoImpl(getConnection()); }
+
+    @Override
+    public HotelDao createHotelDao() { return new HotelDaoImpl(getConnection()); }
+
+    @Override
+    public OrderDao createOrderDao() { return new OrderDaoImpl(getConnection()); }
 }

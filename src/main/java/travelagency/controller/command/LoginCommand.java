@@ -27,10 +27,6 @@ public class LoginCommand implements Command {
             request.getSession().setAttribute("authUser", currentUser);
         }
 
-        if (!currentUser.getEmail().equals("") && CommandUtility.checkUserIsLogged(request, currentUser.getEmail())) {
-            return "/WEB-INF/error.jsp";
-        }
-
         System.out.println("Logged in user is: " + request.getSession().getAttribute("authUser").toString());
 
         return "redirect:/home";

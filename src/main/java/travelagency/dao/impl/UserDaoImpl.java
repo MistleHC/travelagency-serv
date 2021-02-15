@@ -74,7 +74,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findById(int id) {
+    public User findById(Long id) {
         return null;
     }
 
@@ -89,7 +89,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return false;
     }
 

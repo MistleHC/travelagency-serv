@@ -2,21 +2,25 @@
 
 <%@ page language="java" isErrorPage="true"  contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*, java.text.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
 
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Error Page</title>
-</head>
+
+<jsp:include page="${pageContext.request.contextPath}/home_head.jsp">
+    <jsp:param name="titleName" value="Error page"/>
+</jsp:include>
+
     <body>
+    <jsp:include page="${pageContext.request.contextPath}/navbar.jsp"/>
+
         <h2>
            Error Page<br/>
             <i>Error <%= exception %></i>
         </h2>
     <br>
-        <a href="${pageContext.request.contextPath}/index.jsp">Index</a>
+        <a href="${pageContext.request.contextPath}/app/home">Index</a>
 
 
     </body>

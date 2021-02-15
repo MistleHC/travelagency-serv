@@ -1,17 +1,14 @@
-<%@ page contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01
-Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-    <jsp:include page="home_head.jsp">
-        <jsp:param name="titleName" value="Home page"/>
+    <jsp:include page="${pageContext.request.contextPath}/home_head.jsp">
+        <jsp:param name="titleName" value="Tours"/>
     </jsp:include>
-<body>
 
+<body>
 <div class="container-fluid">
-    <jsp:include page="navbar.jsp"/>
+    <jsp:include page="${pageContext.request.contextPath}/navbar.jsp"/>
 
 
         <div class="row2">
@@ -25,7 +22,7 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                         <label>
                             <select class="form-select form-select-lg sel-tx" name="country">
                                 <option value="all">All</option>
-                                <c:forEach items="${countries}" var="country">
+                                <c:forEach items="${sessionScope.countries}" var="country">
                                     <option value="${country.name}">${country.name}</option>
                                 </c:forEach>
                             </select>
@@ -34,7 +31,7 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                         <label>
                             <select class="form-select form-select-lg sel-tx" name="hotel">
                                 <option value="all">All</option>
-                                <c:forEach items="${hotels}" var="hotel">
+                                <c:forEach items="${sessionScope.hotels}" var="hotel">
                                     <option value="${hotel.name}">${hotel.name}</option>
                                 </c:forEach>
                             </select>
@@ -54,11 +51,11 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                     <div class="col-auto">
                         <button class="btn btn-lg btn-success search-btn" type="submit">Search</button>
                     </div>
-                    <sec:authorize access="hasAnyRole('ADMIN')">
+                    <c:if test="${sessionScope.authUser.role == 'ADMIN'}">
                         <div class="col-auto">
                             <a href="#" data-toggle="modal" data-target="#modalcreate" class="btn btn-lg btn-outline btn-primary">Create<i class="fa fa-long-arrow-right"></i> </a>
                         </div>
-                    </sec:authorize>
+                    </c:if>
                 </div>
             </form>
         </div>
@@ -66,7 +63,7 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
     <!-- Modal - Tour creation -->
     <div class="modal fade" id="modalcreate">
         <div class="modal-dialog modal-dialog-centered">
-            <form action="${pageContext.request.contextPath}/tour/create" method="post">
+            <form action="${pageContext.request.contextPath}/app/tour/create" method="post">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
@@ -84,7 +81,7 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                                 <label class="form-label">Tour type:</label>
                                 <label>
                                     <select class="form-select form-select-lg sel-tx" name="tourType">
-                                        <c:forEach items="${tourTypes}" var="ttype">
+                                        <c:forEach items="${sessionScope.tourTypes}" var="ttype">
                                             <option value="${ttype.name}">${ttype.name}</option>
                                         </c:forEach>
                                     </select>
@@ -92,7 +89,7 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                                 <label class="form-label">Country:</label>
                                 <label>
                                     <select class="form-select form-select-lg sel-tx" name="tourCountry">
-                                        <c:forEach items="${countries}" var="country">
+                                        <c:forEach items="${sessionScope.countries}" var="country">
                                             <option value="${country.name}">${country.name}</option>
                                         </c:forEach>
                                     </select>
@@ -102,7 +99,7 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                                 <label class="form-label">Hotel type:</label>
                                 <label>
                                     <select class="form-select form-select-lg sel-tx" name="tourHotel">
-                                        <c:forEach items="${hotels}" var="hotel">
+                                        <c:forEach items="${sessionScope.hotels}" var="hotel">
                                             <option value="${hotel.name}">${hotel.name}</option>
                                         </c:forEach>
                                     </select>
@@ -113,13 +110,13 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                         </div>
                     </div>
                 </div> <!-- Modal footer -->
-                <sec:authorize access="isAuthenticated()">
+                <c:if test="${sessionScope.authUser != null}">
                     <div class="modal-footer">
-                        <sec:authorize access="hasAnyRole('ADMIN')">
+                        <c:if test="${sessionScope.authUser.role == 'ADMIN'}">
                             <button class="btn btn-lg btn-success search-btn" type="submit">Create</button>
-                        </sec:authorize>
+                        </c:if>
                     </div>
-                </sec:authorize>
+                </c:if>
             </div>
             </form>
         </div>
@@ -128,11 +125,11 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
     <div class="row">
 
         <c:choose>
-            <c:when test="${empty tours}">
+            <c:when test="${empty sessionScope.tours}">
                 <h4>No tours available right now :(</h4>
             </c:when>
             <c:otherwise>
-                <c:forEach items="${pagedListHolder.pageList}" var="tour">
+                <c:forEach items="${sessionScope.tours}" var="tour">
 
                     <!-- Modal -->
                     <div class="modal fade" id="modal${tour.id}">
@@ -165,30 +162,44 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                                         </div>
                                     </div>
                                 </div> <!-- Modal footer -->
-                                <sec:authorize access="isAuthenticated()">
+                                <c:if test="${sessionScope.authUser != null}">
                                 <div class="modal-footer">
-                                    <form action="/order" method="get">
-                                        <input type="hidden" name="tourid" value="${tour.id}" />
-                                        <button class="btn btn-lg btn-success search-btn" type="submit">Buy</button>
-                                    </form>
-                                    <sec:authorize access="hasAnyRole('MANAGER', 'ADMIN')">
-                                        <form action="/tour/hot" method="get">
+                                    <c:if test="${sessionScope.authUser.role == 'CUSTOMER'}">
+                                        <form action="${pageContext.request.contextPath}/app/order" method="get">
                                             <input type="hidden" name="tourid" value="${tour.id}" />
-                                            <button class="btn btn-lg btn-warning search-btn" type="submit">Set as hot!</button>
+                                            <button class="btn btn-lg btn-success search-btn" type="submit">Buy</button>
                                         </form>
-                                        <form action="/tour/de-hot" method="get">
-                                            <input type="hidden" name="tourid" value="${tour.id}" />
-                                            <button class="btn btn-lg btn-warning search-btn" type="submit">Set as not hot!</button>
-                                        </form>
-                                    </sec:authorize>
-                                    <sec:authorize access="hasAnyRole('ADMIN')">
-                                        <form action="/tour/delete" method="get">
-                                            <input type="hidden" name="tourid" value="${tour.id}" />
+                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${sessionScope.authUser.role == 'MANAGER'}">
+                                            <form action="${pageContext.request.contextPath}/app/tour/hot" method="get">
+                                                <input type="hidden" name="hottourid" value="${tour.id}" />
+                                                <button class="btn btn-lg btn-warning search-btn" type="submit">Set as hot!</button>
+                                            </form>
+                                            <form action="${pageContext.request.contextPath}/app/tour/de-hot" method="get">
+                                                <input type="hidden" name="dehottourid" value="${tour.id}" />
+                                                <button class="btn btn-lg btn-warning search-btn" type="submit">Set as not hot!</button>
+                                            </form>
+                                        </c:when>
+                                        <c:when test="${sessionScope.authUser.role == 'ADMIN'}">
+                                            <form action="${pageContext.request.contextPath}/app/tour/hot" method="get">
+                                                <input type="hidden" name="hottourid" value="${tour.id}" />
+                                                <button class="btn btn-lg btn-warning search-btn" type="submit">Set as hot!</button>
+                                            </form>
+                                            <form action="${pageContext.request.contextPath}/app/tour/de-hot" method="get">
+                                                <input type="hidden" name="dehottourid" value="${tour.id}" />
+                                                <button class="btn btn-lg btn-warning search-btn" type="submit">Set as not hot!</button>
+                                            </form>
+                                        </c:when>
+                                    </c:choose>
+                                    <c:if test="${sessionScope.authUser.role == 'ADMIN'}">
+                                        <form action="${pageContext.request.contextPath}/app/tour/delete" method="get">
+                                            <input type="hidden" name="deltourid" value="${tour.id}" />
                                             <button class="btn btn-lg btn-danger search-btn" type="submit">Delete</button>
                                         </form>
-                                    </sec:authorize>
+                                    </c:if>
                                 </div>
-                                </sec:authorize>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -222,9 +233,6 @@ Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
                     </div>
                 </div>
                 </c:forEach>
-            <div class="pagging">
-                <tg:paging pagedListHolder="${pagedListHolder}" pagedLink="${pagedLink}" />
-            </div>
             </c:otherwise>
         </c:choose>
     </div>
