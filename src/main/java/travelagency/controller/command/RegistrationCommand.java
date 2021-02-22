@@ -41,7 +41,7 @@ public class RegistrationCommand implements Command  {
         }
 
         if (success) {
-            request.getSession().setAttribute("authUser", user);
+            request.getSession().setAttribute("authUser", userService.findUserByEmail(email));
 
             if (CommandUtility.checkUserIsLogged(request, user.getEmail())) {
                 return "/WEB-INF/error.jsp";

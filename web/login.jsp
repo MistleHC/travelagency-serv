@@ -9,7 +9,7 @@
 <div class="container-fluid">
     <jsp:include page="${pageContext.request.contextPath}/navbar.jsp"/>
 
-    <div class="row2">
+    <div class="row-f">
         <div class="row check-b">
             <h1 class="text-center">Login form</h1>
         </div>
@@ -32,6 +32,10 @@
                 </div>
 
             </form>
+
+            <div class="invalid-feedback d-block">
+                <i>${sessionScope.error}</i>
+            </div>
         </div>
 
         <div class="row mb-4 check-b">

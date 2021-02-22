@@ -17,7 +17,7 @@ public class LoginCommand implements Command {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        if (email == null || email.equals("") || password == null || password.equals("")){
+        if (email == null || email.equals("") || password == null || password.equals("")) {
             return "/login.jsp";
         }
 
@@ -25,9 +25,11 @@ public class LoginCommand implements Command {
 
         if (currentUser.getPassword().equals(password) && currentUser.getEmail().equals(email)) {
             request.getSession().setAttribute("authUser", currentUser);
-        }
 
-        System.out.println("Logged in user is: " + request.getSession().getAttribute("authUser").toString());
+            System.out.println("Logged in user is: " + request.getSession().getAttribute("authUser").toString());
+        } else {
+            request.getSession().setAttribute("error", "Wrong email or password");
+        }
 
         return "redirect:/home";
     }

@@ -97,9 +97,11 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean create(Order order) {
+        System.out.println();
+
         try (Statement st = connection.createStatement()) {
             int affectedRows = st.executeUpdate(String.format(SQLConstants.INSERT_NEW_ORDER,
-                                                                order.getCustomer(),
+                                                                order.getCustomerId(),
                                                                 order.getTour().getId(),
                                                                 order.getStatus().getId()));
             if (affectedRows == 0) {
