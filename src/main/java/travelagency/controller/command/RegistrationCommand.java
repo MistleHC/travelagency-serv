@@ -23,7 +23,26 @@ public class RegistrationCommand implements Command  {
 
         System.out.println(name + " " + email + " " + password);
 
-        if (name == null || name.equals("") || email == null || email.equals("") || password == null || password.equals("")) {
+        if (name == null && email == null && password == null && request.getSession().getAttribute("error") != null) {
+            request.getSession().setAttribute("error", null);
+        }
+
+        if (name == null && email == null && password == null) {
+            return "/registration.jsp";
+        }
+
+        if (email == null || email.equals("")) {
+            request.getSession().setAttribute("error", "Email should be specified!");
+            return "/registration.jsp";
+        }
+
+        if (password == null || password.equals("")) {
+            request.getSession().setAttribute("error", "Password should be specified!");
+            return "/registration.jsp";
+        }
+
+        if (name == null || name.equals("")) {
+            request.getSession().setAttribute("error", "Name should be specified!");
             return "/registration.jsp";
         }
 
@@ -39,6 +58,7 @@ public class RegistrationCommand implements Command  {
                             .build();
             success = userService.registerUser(user);
         }
+
 
         if (success) {
             request.getSession().setAttribute("authUser", userService.findUserByEmail(email));

@@ -33,19 +33,14 @@
                 </div>
 
                 <div class="mb-3">
-                    <button class="btn btn-success" type="submit"><fmt:message key="login.log" /></button> ${error}
+                    <button class="btn btn-success" type="submit"><fmt:message key="login.log" /></button>
                 </div>
 
             </form>
-
-            <div class="invalid-feedback d-block">
-                <i>${sessionScope.error}</i>
-            </div>
         </div>
 
         <div class="row mb-4 check-b">
-            <h3 class="text-left text-danger">${error}</h3>
-            <h3 class="text-left text-info">${message}</h3>
+            <h3 class="text-left text-danger">${sessionScope.error}</h3>
         </div>
     </div>
 
