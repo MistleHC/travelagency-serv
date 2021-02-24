@@ -21,21 +21,26 @@ public class UserDaoImpl implements UserDao {
     public User findByEmail(String email) {
         User user = null;
 
-        try (Statement st = connection.createStatement()) {
-            connection.setAutoCommit(false);
-            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_USER_BY_EMAIL, email));
-            System.out.println("SQL: " + String.format(SQLConstants.GET_USER_BY_EMAIL, email));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_USER_BY_EMAIL)) {
+            st.setString(1, email);
+
+            System.out.println("1: " + st);
+            ResultSet rs = st.executeQuery();
+
             UserMapper userMapper = new UserMapper();
             while (rs.next()) {
                 user = userMapper.extractFromResultSet(rs);
             }
-            user = getUserRole(st, user);
 
-            connection.commit();
+            if (user == null) {
+                throw new SQLException("User not found");
+            }
+
+            user = getUserRole(user);
+
             return user;
         } catch (SQLException e) {
             System.err.println("Couldn't find user " + e.getMessage());
-            doRollback(connection);
         }
 
         return user;
@@ -44,13 +49,14 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean create(User user) {
         System.out.println("Adding: " + user.toString());
-        try (Statement st = connection.createStatement()) {
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.INSERT_USER_WITH_NAME_EMAIL_PW)) {
             connection.setAutoCommit(false);
 
-            int affectedRows = st.executeUpdate(String.format(SQLConstants.INSERT_USER_WITH_NAME_EMAIL_PW,
-                                                            user.getEmail(),
-                                                            user.getName(),
-                                                            AESEncryptor.encrypt(user.getPassword(), "travel")));
+            st.setString(1, user.getEmail());
+            st.setString(2, user.getName());
+            st.setString(3, AESEncryptor.encrypt(user.getPassword(), "travel"));
+
+            int affectedRows = st.executeUpdate();
 
             User insertedUser = findByEmail(user.getEmail());
 
@@ -85,11 +91,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean update(User user) {
-        try (Statement st = connection.createStatement()) {
-            int affectedRows = st.executeUpdate(String.format(SQLConstants.UPDATE_USER_ADDITIONAL_INFO,
-                                                                                user.getAboutMe(),
-                                                                                user.getFullName(),
-                                                                                user.getId()));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.UPDATE_USER_ADDITIONAL_INFO)) {
+            st.setString(1, user.getAboutMe());
+            st.setString(2, user.getFullName());
+            st.setLong(3, user.getId());
+            int affectedRows = st.executeUpdate();
+
             if (affectedRows == 0) {
                 throw new SQLException("Updating user details failed, no rows affected.");
             }
@@ -123,10 +130,10 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    private User getUserRole(Statement st, User user) throws SQLException {
-        if (Objects.nonNull(user)) {
-            ResultSet rsTwo = st.executeQuery(String.format(SQLConstants.GET_USER_ROLE_BY_USER_ID, user.getId()));
-            System.out.println("SQL: " + String.format(SQLConstants.GET_USER_ROLE_BY_USER_ID, user.getId()));
+    private User getUserRole(User user) throws SQLException {
+        try (Statement stm = connection.createStatement()) {
+            ResultSet rsTwo = stm.executeQuery(String.format(SQLConstants.GET_USER_ROLE_BY_USER_ID, user.getId()));
+
             while (rsTwo.next()) {
                 user.setRole(rsTwo.getString("name"));
             }

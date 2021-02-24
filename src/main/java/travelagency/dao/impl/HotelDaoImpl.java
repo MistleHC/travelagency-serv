@@ -4,10 +4,7 @@ import travelagency.constants.SQLConstants;
 import travelagency.dao.HotelDao;
 import travelagency.model.HotelType;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +37,9 @@ public class HotelDaoImpl implements HotelDao {
     public HotelType getByName(String name) {
         HotelType hotel = new HotelType((long) -1, "");
 
-        try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_HOTEL_BY_NAME, name));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_HOTEL_BY_NAME)) {
+            st.setString(1, name);
+            ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
                 hotel = new HotelType(rs.getLong("id"), rs.getString("name"));

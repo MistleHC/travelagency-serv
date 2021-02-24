@@ -8,7 +8,7 @@ public class SQLConstants {
     public static final String GET_USER_BY_EMAIL =
                     "SELECT id, email, name, password, aboutme, fullname " +
                     "FROM users " +
-                    "WHERE email LIKE '%s'";
+                    "WHERE email LIKE ?";
 
     public static final String GET_USER_ROLE_BY_USER_ID =
                     "SELECT name " +
@@ -17,7 +17,7 @@ public class SQLConstants {
 
     public static final String INSERT_USER_WITH_NAME_EMAIL_PW =
                     "INSERT INTO users (email, name, password) " +
-                    "VALUES ('%1$s', '%2$s', '%3$s')";
+                    "VALUES (?, ?, ?)";
 
     public static final String INSERT_ROLE_FOR_USER =
                     "INSERT INTO user_roles (user_id, role_id) " +
@@ -25,8 +25,8 @@ public class SQLConstants {
 
     public static final String UPDATE_USER_ADDITIONAL_INFO =
                     "UPDATE users " +
-                    "SET aboutme = '%1$s', fullname = '%2$s' " +
-                    "WHERE id = %3$s;";
+                    "SET aboutme = ?, fullname = ? " +
+                    "WHERE id = ?;";
 
     //=================================================================================================================
     //OrderDao Queries
@@ -78,21 +78,21 @@ public class SQLConstants {
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
-                    "WHERE t.country LIKE '%s';";
+                    "WHERE t.country LIKE ?;";
 
     public static final String GET_TOURS_BY_HOTEL_NAME =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
-                    "WHERE ht.name LIKE '%s';";
+                    "WHERE ht.name LIKE ?;";
 
     public static final String GET_TOURS_BY_COUNTRY_AND_HOTEL =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
-                    "WHERE t.country LIKE '%1$s' AND ht.name LIKE '%2$s';";
+                    "WHERE t.country LIKE ? AND ht.name LIKE ?;";
 
     public static final String GET_ALL_TOURS =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
@@ -102,14 +102,14 @@ public class SQLConstants {
 
     public static final String INSERT_NEW_TOUR =
                     "INSERT INTO tours (name, description, country, peoples, hotel_type_id, tour_type_id, price, is_hot) " +
-                    "VALUES ('%1$s', '%2$s', '%3$s', %4$s, %5$s, %6$s, %7$s, %8$s);";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
     public static final String GET_TOUR_BY_ID =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
-                    "WHERE t.id = %s;";
+                    "WHERE t.id = ?;";
 
     public static final String UPDATE_TOUR_HOTNESS_VALUE =
                     "UPDATE tours " +
@@ -121,7 +121,7 @@ public class SQLConstants {
 
     public static final String GET_TOUR_TYPE_BY_NAME =
                     "SELECT id, name FROM tour_types " +
-                    "WHERE name LIKE '%s';";
+                    "WHERE name LIKE ?;";
 
     public static final String DELETE_TOUR_BY_ID =
                     "DELETE FROM tours " +
@@ -143,5 +143,5 @@ public class SQLConstants {
 
     public static final String GET_HOTEL_BY_NAME =
                     "SELECT id, name FROM hotel_types " +
-                    "WHERE name LIKE '%s';";
+                    "WHERE name LIKE ?;";
 }

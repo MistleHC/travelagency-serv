@@ -38,12 +38,7 @@ public class CountryDaoImpl implements CountryDao {
     }
 
     @Override
-    public Optional<Country> findByName(String countryName) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void close() throws Exception {
+    public void close() {
         try {
             connection.close();
         } catch (SQLException e) {

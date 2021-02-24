@@ -6,10 +6,7 @@ import travelagency.dao.mapper.TourMapper;
 import travelagency.model.Tour;
 import travelagency.model.TourType;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +21,9 @@ public class TourDaoImpl implements TourDao {
     public Tour findById(Long id) {
         Tour tour = Tour.newBuilder().build();
 
-        try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_TOUR_BY_ID, id));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOUR_BY_ID)) {
+            st.setLong(1, id);
+            ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
 
@@ -43,8 +41,9 @@ public class TourDaoImpl implements TourDao {
     public List<Tour> findAllByCountry(String country) {
         List<Tour> tours = new ArrayList<>();
 
-        try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_TOURS_BY_COUNTRY, country));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_COUNTRY)) {
+            st.setString(1, country);
+            ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
 
@@ -53,7 +52,7 @@ public class TourDaoImpl implements TourDao {
                 tours.add(tour);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour list " + e.getMessage());
+            System.err.println("Couldn't receive tour list " + e.toString());
         }
 
         return tours;
@@ -63,8 +62,9 @@ public class TourDaoImpl implements TourDao {
     public List<Tour> findAllByHotelType_Name(String hotel) {
         List<Tour> tours = new ArrayList<>();
 
-        try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_TOURS_BY_HOTEL_NAME, hotel));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_HOTEL_NAME)) {
+            st.setString(1, hotel);
+            ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
 
@@ -83,8 +83,10 @@ public class TourDaoImpl implements TourDao {
     public List<Tour> findAllByCountryAndHotelType_Name(String country, String hotel) {
         List<Tour> tours = new ArrayList<>();
 
-        try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_TOURS_BY_COUNTRY_AND_HOTEL, country, hotel));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_COUNTRY_AND_HOTEL)) {
+            st.setString(1, country);
+            st.setString(2, hotel);
+            ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
 
@@ -121,8 +123,9 @@ public class TourDaoImpl implements TourDao {
     public TourType getTourTypeByName(String name) {
         TourType tourType = new TourType((long) -1, "");
 
-        try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_TOUR_TYPE_BY_NAME, name));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOUR_TYPE_BY_NAME)) {
+            st.setString(1, name);
+            ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
                 tourType = new TourType(rs.getLong("id"), rs.getString("name"));
@@ -153,16 +156,17 @@ public class TourDaoImpl implements TourDao {
 
     @Override
     public boolean create(Tour tour) {
-        try (Statement st = connection.createStatement()) {
-            int affectedRows = st.executeUpdate(String.format(SQLConstants.INSERT_NEW_TOUR,
-                                                                        tour.getName(),
-                                                                        tour.getDescription(),
-                                                                        tour.getCountry(),
-                                                                        tour.getPeoples(),
-                                                                        tour.getHotelType().getId(),
-                                                                        tour.getTourType().getId(),
-                                                                        tour.getPrice(),
-                                                                        false));
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.INSERT_NEW_TOUR)) {
+            st.setString(1, tour.getName());
+            st.setString(2, tour.getDescription());
+            st.setString(3, tour.getCountry());
+            st.setLong(4, tour.getPeoples());
+            st.setLong(5, tour.getHotelType().getId());
+            st.setLong(6, tour.getTourType().getId());
+            st.setLong(7, tour.getPrice());
+            st.setBoolean(8, false);
+
+            int affectedRows = st.executeUpdate();
 
             if (affectedRows == 0) {
                 throw new SQLException("Creating tour failed, no rows affected.");
@@ -222,14 +226,6 @@ public class TourDaoImpl implements TourDao {
             connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void doRollback(Connection connection) {
-        try {
-            connection.rollback();
-        } catch (SQLException e) {
-            System.err.println("Rollback error occurred");
         }
     }
 }
