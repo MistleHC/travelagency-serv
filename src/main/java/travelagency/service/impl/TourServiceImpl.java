@@ -26,7 +26,9 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Tour getById(long tourId) {
-        return null;
+        try (TourDao tourDao = daoFactory.createTourDao()) {
+            return tourDao.findById(tourId);
+        }
     }
 
     @Override
@@ -36,9 +38,9 @@ public class TourServiceImpl implements TourService {
             if (filter.getHotel().equals("") && !filter.getCountry().equals("")) {
                 tours = tourDao.findAllByCountry(filter.getCountry());
             } else if (filter.getCountry().equals("") && !filter.getHotel().equals("")) {
-                tours = tourDao.findAllByHotelType_Name(filter.getHotel());
+                tours = tourDao.findAllByHotelTypeName(filter.getHotel());
             } else if (!filter.getCountry().equals("") && !filter.getCountry().equals("")) {
-                tours = tourDao.findAllByCountryAndHotelType_Name(filter.getCountry(), filter.getHotel());
+                tours = tourDao.findAllByCountryAndHotelTypeName(filter.getCountry(), filter.getHotel());
             } else {
                 tours = getAll();
             }

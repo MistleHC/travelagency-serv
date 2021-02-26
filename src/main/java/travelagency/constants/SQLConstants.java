@@ -111,6 +111,13 @@ public class SQLConstants {
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
                     "WHERE t.id = ?;";
 
+    public static final String GET_TOUR_BY_NAME =
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
+                    "FROM tours AS t " +
+                    "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
+                    "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
+                    "WHERE t.name LIKE ?;";
+
     public static final String UPDATE_TOUR_HOTNESS_VALUE =
                     "UPDATE tours " +
                     "SET is_hot = %1$s " +

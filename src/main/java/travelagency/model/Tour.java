@@ -133,8 +133,8 @@ public class Tour {
                 Objects.equals(country, tour.country) &&
                 Objects.equals(peoples, tour.peoples) &&
                 Objects.equals(price, tour.price) &&
-                Objects.equals(hotelType, tour.hotelType) &&
-                Objects.equals(tourType, tour.tourType);
+                Objects.equals(hotelType.getName(), tour.hotelType.getName()) &&
+                Objects.equals(tourType.getName(), tour.tourType.getName());
     }
 
     @Override

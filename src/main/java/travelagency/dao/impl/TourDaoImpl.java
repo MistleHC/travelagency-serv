@@ -31,7 +31,27 @@ public class TourDaoImpl implements TourDao {
                 tour = tourMapper.extractFromResultSet(rs);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour list " + e.getMessage());
+            System.err.println("Couldn't receive tour " + e.getMessage());
+        }
+
+        return tour;
+    }
+
+    @Override
+    public Tour findByName(String name) {
+        Tour tour = Tour.newBuilder().build();
+
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOUR_BY_NAME)) {
+            st.setString(1, name);
+            ResultSet rs = st.executeQuery();
+
+            TourMapper tourMapper = new TourMapper();
+
+            while (rs.next()) {
+                tour = tourMapper.extractFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.err.println("Couldn't receive tour " + e.getMessage());
         }
 
         return tour;
@@ -59,7 +79,7 @@ public class TourDaoImpl implements TourDao {
     }
 
     @Override
-    public List<Tour> findAllByHotelType_Name(String hotel) {
+    public List<Tour> findAllByHotelTypeName(String hotel) {
         List<Tour> tours = new ArrayList<>();
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_HOTEL_NAME)) {
@@ -80,7 +100,7 @@ public class TourDaoImpl implements TourDao {
     }
 
     @Override
-    public List<Tour> findAllByCountryAndHotelType_Name(String country, String hotel) {
+    public List<Tour> findAllByCountryAndHotelTypeName(String country, String hotel) {
         List<Tour> tours = new ArrayList<>();
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_COUNTRY_AND_HOTEL)) {
