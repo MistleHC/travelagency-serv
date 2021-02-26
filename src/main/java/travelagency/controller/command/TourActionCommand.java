@@ -1,6 +1,8 @@
 package travelagency.controller.command;
 
 import travelagency.controller.dto.TourCreationDto;
+import travelagency.controller.validator.TourCreationValidator;
+import travelagency.exceptions.ValidationException;
 import travelagency.service.TourService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,17 +44,26 @@ public class TourActionCommand implements Command {
             return "redirect:/home";
         }
 
-        TourCreationDto tourCreationDto = TourCreationDto.newBuilder()
-                .setTourName(tourName)
-                .setTourDescription(tourDescription)
-                .setTourType(tourType)
-                .setTourCountry(tourCountry)
-                .setTourSize(Long.parseLong(tourSize))
-                .setTourHotel(tourHotel)
-                .setTourPrice(Long.parseLong(tourPrice))
-                .build();
+        if (tourSize != null && !tourSize.equals("") && tourPrice != null && !tourPrice.equals("")) {
+            TourCreationDto tourCreationDto = TourCreationDto.newBuilder()
+                    .setTourName(tourName)
+                    .setTourDescription(tourDescription)
+                    .setTourType(tourType)
+                    .setTourCountry(tourCountry)
+                    .setTourSize(Long.parseLong(tourSize))
+                    .setTourHotel(tourHotel)
+                    .setTourPrice(Long.parseLong(tourPrice))
+                    .build();
 
-        tourService.saveNewTour(tourCreationDto);
+            try {
+                TourCreationValidator.validate(tourCreationDto);
+            } catch (ValidationException ex) {
+                request.getSession().setAttribute("error", "Enter correct data!");
+                return "redirect:/home";
+            }
+
+            tourService.saveNewTour(tourCreationDto);
+        }
 
         return "redirect:/home";
     }

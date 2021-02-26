@@ -78,27 +78,28 @@ public class SQLConstants {
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
-                    "WHERE t.country LIKE ?;";
+                    "WHERE t.country LIKE ? LIMIT ? OFFSET ?";
 
     public static final String GET_TOURS_BY_HOTEL_NAME =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
-                    "WHERE ht.name LIKE ?;";
+                    "WHERE ht.name LIKE ? LIMIT ? OFFSET ?";
 
     public static final String GET_TOURS_BY_COUNTRY_AND_HOTEL =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
-                    "WHERE t.country LIKE ? AND ht.name LIKE ?;";
+                    "WHERE t.country LIKE ? AND ht.name LIKE ? LIMIT ? OFFSET ?";
 
     public static final String GET_ALL_TOURS =
                     "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
-                    "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id;";
+                    "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
+                    "ORDER BY t.is_hot DESC LIMIT ? OFFSET ?";
 
     public static final String INSERT_NEW_TOUR =
                     "INSERT INTO tours (name, description, country, peoples, hotel_type_id, tour_type_id, price, is_hot) " +
@@ -133,6 +134,10 @@ public class SQLConstants {
     public static final String DELETE_TOUR_BY_ID =
                     "DELETE FROM tours " +
                     "WHERE id = %s;";
+
+    public static final String GET_NUMBER_OF_ROWS =
+                    "SELECT COUNT(*)" +
+                    "FROM tours";
 
     //=================================================================================================================
     //CountryDao Queries

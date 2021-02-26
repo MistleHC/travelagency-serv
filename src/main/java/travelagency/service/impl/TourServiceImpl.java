@@ -21,9 +21,9 @@ public class TourServiceImpl implements TourService {
 
 
     @Override
-    public List<Tour> getAll() {
+    public List<Tour> getAll(int currentPage, int recordsPerPage) {
         try (TourDao tourDao = daoFactory.createTourDao()) {
-            return tourDao.findAll();
+            return tourDao.findAll(currentPage, recordsPerPage);
         }
     }
 
@@ -35,17 +35,17 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<Tour> getAllByFilter(TourFilterDto filter) {
+    public List<Tour> getAllByFilter(TourFilterDto filter, int currentPage, int recordsPerPage) {
         List<Tour> tours;
         try (TourDao tourDao = daoFactory.createTourDao()) {
             if (filter.getHotel().equals("") && !filter.getCountry().equals("")) {
-                tours = tourDao.findAllByCountry(filter.getCountry());
+                tours = tourDao.findAllByCountry(filter.getCountry(), currentPage, recordsPerPage);
             } else if (filter.getCountry().equals("") && !filter.getHotel().equals("")) {
-                tours = tourDao.findAllByHotelTypeName(filter.getHotel());
+                tours = tourDao.findAllByHotelTypeName(filter.getHotel(), currentPage, recordsPerPage);
             } else if (!filter.getCountry().equals("") && !filter.getCountry().equals("")) {
-                tours = tourDao.findAllByCountryAndHotelTypeName(filter.getCountry(), filter.getHotel());
+                tours = tourDao.findAllByCountryAndHotelTypeName(filter.getCountry(), filter.getHotel(),currentPage ,recordsPerPage);
             } else {
-                tours = getAll();
+                tours = getAll(currentPage, recordsPerPage);
             }
 
             return filterTours(tours, filter);
@@ -100,6 +100,13 @@ public class TourServiceImpl implements TourService {
         } catch (Exception exception) {
             logger.info("ERROR: Error with AutoClosable at TourService!");
             return false;
+        }
+    }
+
+    @Override
+    public Integer getNumberOfRows() {
+        try (TourDao tourDao = daoFactory.createTourDao()) {
+            return tourDao.getNumberOfRows();
         }
     }
 

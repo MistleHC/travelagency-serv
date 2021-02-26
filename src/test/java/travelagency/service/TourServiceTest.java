@@ -64,10 +64,10 @@ public class TourServiceTest {
             id = tourDao.findByName("DeletionTest").getId();
         }
 
-        int initialSize = tourService.getAll().size();
+        int initialSize = tourService.getAll(1, 999).size();
         tourService.deleteById(id);
         tourIds.remove(id);
-        assertEquals(initialSize - 1, tourService.getAll().size());
+        assertEquals(initialSize - 1, tourService.getAll(1, 999).size());
     }
 
     @Test
@@ -77,9 +77,9 @@ public class TourServiceTest {
                                                    .build();
         tourFilterDto.changeDefaultValues();
 
-        int countryFilterCtn = tourService.getAllByFilter(tourFilterDto).size();
+        int countryFilterCtn = tourService.getAllByFilter(tourFilterDto, 1, 999).size();
         createObject("FilterCountryTest");
-        assertEquals(countryFilterCtn + 1, tourService.getAllByFilter(tourFilterDto).size());
+        assertEquals(countryFilterCtn + 1, tourService.getAllByFilter(tourFilterDto, 1, 999).size());
     }
 
     @Test
@@ -89,9 +89,9 @@ public class TourServiceTest {
                                                    .build();
         tourFilterDto.changeDefaultValues();
 
-        int hotelFilterCtn = tourService.getAllByFilter(tourFilterDto).size();
+        int hotelFilterCtn = tourService.getAllByFilter(tourFilterDto, 1, 999).size();
         createObject("FilterHotelTest");
-        assertEquals(hotelFilterCtn + 1, tourService.getAllByFilter(tourFilterDto).size());
+        assertEquals(hotelFilterCtn + 1, tourService.getAllByFilter(tourFilterDto, 1, 999).size());
     }
 
     @Test
@@ -102,9 +102,9 @@ public class TourServiceTest {
                                                    .build();
         tourFilterDto.changeDefaultValues();
 
-        int priceFilterCtn = tourService.getAllByFilter(tourFilterDto).size();
+        int priceFilterCtn = tourService.getAllByFilter(tourFilterDto, 1, 999).size();
         createObject("FilterPriceTest");
-        assertEquals(priceFilterCtn + 1, tourService.getAllByFilter(tourFilterDto).size());
+        assertEquals(priceFilterCtn + 1, tourService.getAllByFilter(tourFilterDto, 1, 999).size());
     }
 
     @Test
@@ -114,16 +114,16 @@ public class TourServiceTest {
                                                    .build();
         tourFilterDto.changeDefaultValues();
 
-        int groupFilterCtn = tourService.getAllByFilter(tourFilterDto).size();
+        int groupFilterCtn = tourService.getAllByFilter(tourFilterDto, 1, 999).size();
         createObject("FilterGroupTest");
-        assertEquals(groupFilterCtn + 1, tourService.getAllByFilter(tourFilterDto).size());
+        assertEquals(groupFilterCtn + 1, tourService.getAllByFilter(tourFilterDto, 1, 999).size());
     }
 
     @Test
     public void testTourWasAdded() {
-        int initialSize = tourService.getAll().size();
+        int initialSize = tourService.getAll(1, 999).size();
         createObject("Test");
-        assertEquals(initialSize + 1, tourService.getAll().size());
+        assertEquals(initialSize + 1, tourService.getAll(1, 999).size());
     }
 
     @After

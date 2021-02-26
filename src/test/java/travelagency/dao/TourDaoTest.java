@@ -35,8 +35,8 @@ public class TourDaoTest {
     @Test
     public void testFindAllByCountry() {
         try (TourDao tourDao = daoFactory.createTourDao()) {
-            List<Tour> tours = tourDao.findAllByCountry("Japan");
-            assertNotEquals(tourDao.findAll().size(), tours);
+            List<Tour> tours = tourDao.findAllByCountry("Japan", 1, 999);
+            assertNotEquals(tourDao.findAll(1, 999).size(), tours);
 
             for (Tour t : tours) {
                assertEquals("Japan", t.getCountry());
@@ -47,8 +47,8 @@ public class TourDaoTest {
     @Test
     public void testFindByHotelTypeName() {
         try (TourDao tourDao = daoFactory.createTourDao()) {
-            List<Tour> tours = tourDao.findAllByHotelTypeName("Resort");
-            assertNotEquals(tourDao.findAll().size(), tours);
+            List<Tour> tours = tourDao.findAllByHotelTypeName("Resort", 1, 999);
+            assertNotEquals(tourDao.findAll(1, 999).size(), tours);
 
             for (Tour t : tours) {
                 assertEquals("Resort", t.getHotelType().getName());
@@ -59,8 +59,8 @@ public class TourDaoTest {
     @Test
     public void testFindByHotelAndTourType() {
         try (TourDao tourDao = daoFactory.createTourDao()) {
-            List<Tour> tours = tourDao.findAllByCountryAndHotelTypeName("Japan", "Resort");
-            assertNotEquals(tourDao.findAll().size(), tours);
+            List<Tour> tours = tourDao.findAllByCountryAndHotelTypeName("Japan", "Resort", 1, 999);
+            assertNotEquals(tourDao.findAll(1, 999).size(), tours);
 
             for (Tour t : tours) {
                 assertEquals("Japan", t.getCountry());
@@ -101,12 +101,13 @@ public class TourDaoTest {
         createObject("DeleteTest");
 
         try (TourDao tourDao = daoFactory.createTourDao()) {
-            int initialSize = tourDao.findAll().size();
+            int initialSize = tourDao.findAll(1, 999).size();
+            System.out.println(tourDao.findAll(1, 999).size());
             id = tourDao.findByName("DeleteTest").getId();
             tourDao.delete(id);
             tourIds.remove(id);
 
-            assertEquals(initialSize - 1, tourDao.findAll().size());
+            assertEquals(initialSize - 1, tourDao.findAll(1, 999).size());
         }
     }
 

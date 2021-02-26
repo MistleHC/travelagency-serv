@@ -8,11 +8,12 @@ import java.util.List;
 public interface TourDao extends GenericDao<Tour> {
     Tour findById(Long id);
     Tour findByName(String name);
-    List<Tour> findAll();
-    List<Tour> findAllByCountry(String country);
-    List<Tour> findAllByHotelTypeName(String hotel);
-    List<Tour> findAllByCountryAndHotelTypeName(String country, String hotel);
+    List<Tour> findAll(int currentPage, int recordsPerPage);
+    List<Tour> findAllByCountry(String country, int currentPage, int recordsPerPage);
+    List<Tour> findAllByHotelTypeName(String hotel, int currentPage, int recordsPerPage);
+    List<Tour> findAllByCountryAndHotelTypeName(String country, String hotel, int currentPage, int recordsPerPage);
     List<TourType> getTourTypes();
     TourType getTourTypeByName(String name);
     boolean setHot(Long id, Boolean condition);
+    Integer getNumberOfRows();
 }

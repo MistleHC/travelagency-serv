@@ -20,6 +20,17 @@ public class HomeCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        int currentPage = 0;
+        int recordsPerPage = 12;
+
+        if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+            currentPage = Integer.parseInt(request.getParameter("page"));
+        }
+
+        if (currentPage == 0) {
+            currentPage = 1;
+        }
+
         String country = request.getParameter("country");
         String hotel = request.getParameter("hotel");
         String lowerprice = request.getParameter("lowerprice");
@@ -35,10 +46,22 @@ public class HomeCommand implements Command {
                                                    .build();
         tourFilterDto.changeDefaultValues();
 
-        request.getSession().setAttribute("tours", tourService.getAllByFilter(tourFilterDto));
+        request.getSession().setAttribute("tours", tourService.getAllByFilter(tourFilterDto, currentPage, recordsPerPage));
         request.getSession().setAttribute("countries", countryService.getAll());
         request.getSession().setAttribute("hotels", hotelService.getAll());
         request.getSession().setAttribute("tourTypes", tourService.getTourTypes());
+
+        int rows = tourService.getNumberOfRows();
+
+        int nOfPages = rows / recordsPerPage;
+
+        if (nOfPages % recordsPerPage > 0) {
+            nOfPages++;
+        }
+
+        request.getSession().setAttribute("noOfPages", nOfPages);
+        request.getSession().setAttribute("currentPage", currentPage);
+        request.getSession().setAttribute("recordsPerPage", recordsPerPage);
 
         return "/home_page.jsp";
     }

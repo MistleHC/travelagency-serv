@@ -8,12 +8,13 @@ import travelagency.model.TourType;
 import java.util.List;
 
 public interface TourService {
-    List<Tour> getAll();
+    List<Tour> getAll(int currentPage, int recordsPerPage);
     Tour getById(long tourId);
-    List<Tour> getAllByFilter(TourFilterDto filter);
+    List<Tour> getAllByFilter(TourFilterDto filter, int currentPage, int recordsPerPage);
     List<TourType> getTourTypes();
     void setHot(Long tourId);
     void setNotHot(Long tourId);
     void deleteById(Long tourId);
     boolean saveNewTour(TourCreationDto tourCreationDto);
+    Integer getNumberOfRows();
 }

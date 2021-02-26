@@ -62,12 +62,16 @@ public class TourDaoImpl implements TourDao {
     }
 
     @Override
-    public List<Tour> findAllByCountry(String country) {
+    public List<Tour> findAllByCountry(String country, int currentPage, int recordsPerPage) {
         List<Tour> tours = new ArrayList<>();
         logger.info("Receiving tours for " + country);
 
+        int start = currentPage * recordsPerPage - recordsPerPage;
+
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_COUNTRY)) {
             st.setString(1, country);
+            st.setInt(2, recordsPerPage);
+            st.setInt(3, start);
             ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
@@ -84,12 +88,16 @@ public class TourDaoImpl implements TourDao {
     }
 
     @Override
-    public List<Tour> findAllByHotelTypeName(String hotel) {
+    public List<Tour> findAllByHotelTypeName(String hotel, int currentPage, int recordsPerPage) {
         List<Tour> tours = new ArrayList<>();
         logger.info("Receiving tours for " + hotel + " hotel");
 
+        int start = currentPage * recordsPerPage - recordsPerPage;
+
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_HOTEL_NAME)) {
             st.setString(1, hotel);
+            st.setInt(2, recordsPerPage);
+            st.setInt(3, start);
             ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
@@ -106,13 +114,17 @@ public class TourDaoImpl implements TourDao {
     }
 
     @Override
-    public List<Tour> findAllByCountryAndHotelTypeName(String country, String hotel) {
+    public List<Tour> findAllByCountryAndHotelTypeName(String country, String hotel, int currentPage, int recordsPerPage) {
         List<Tour> tours = new ArrayList<>();
         logger.info("Receiving tours for " + country + " and " + hotel);
+
+        int start = currentPage * recordsPerPage - recordsPerPage;
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_COUNTRY_AND_HOTEL)) {
             st.setString(1, country);
             st.setString(2, hotel);
+            st.setInt(3, recordsPerPage);
+            st.setInt(4, start);
             ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
@@ -185,6 +197,20 @@ public class TourDaoImpl implements TourDao {
     }
 
     @Override
+    public Integer getNumberOfRows() {
+        logger.info("Receiving the number of tour rows");
+
+        try (Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+            ResultSet rs = st.executeQuery(SQLConstants.GET_NUMBER_OF_ROWS);
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            logger.info("ERROR: Couldn't receive number of rows for list of tours ");
+            return 0;
+        }
+    }
+
+    @Override
     public boolean create(Tour tour) {
         logger.info("Creating tour " + tour.toString());
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.INSERT_NEW_TOUR)) {
@@ -210,12 +236,17 @@ public class TourDaoImpl implements TourDao {
         }
     }
 
-    public List<Tour> findAll() {
+    public List<Tour> findAll(int currentPage, int recordsPerPage) {
         List<Tour> tours = new ArrayList<>();
         logger.info("Receiving list of all tours");
 
-        try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery(SQLConstants.GET_ALL_TOURS);
+        int start = currentPage * recordsPerPage - recordsPerPage;
+
+        try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_ALL_TOURS)) {
+            st.setInt(1, recordsPerPage);
+            st.setInt(2, start);
+
+            ResultSet rs = st.executeQuery();
 
             TourMapper tourMapper = new TourMapper();
 

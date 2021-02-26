@@ -233,6 +233,10 @@ table.shoping-cart-table tr td:last-child {
     width: 26%;
 }
 
+.paging-element {
+    padding-left: 50%;
+}
+
 .check-b {
     background-color: #f8f8f9;
     margin-left: 0;
