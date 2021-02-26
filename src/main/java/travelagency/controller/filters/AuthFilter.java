@@ -8,8 +8,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class AuthFilter implements Filter  {
+    private final static Logger logger = Logger.getLogger(AuthFilter.class.getName());
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -17,10 +19,8 @@ public class AuthFilter implements Filter  {
         User user = (User) req.getSession().getAttribute("authUser");
         String path = req.getRequestURI().replace("/app", "");
 
-        System.out.println("Auth: " + path);
-
         if (user != null) {
-            System.out.println("Current role: " + user.getRole());
+            logger.info("Path: " + path + "; Current role: " + user.getRole());
         }
 
         if (path.contains("styles") || path.contains("images")) {

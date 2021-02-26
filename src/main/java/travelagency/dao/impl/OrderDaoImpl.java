@@ -14,9 +14,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class OrderDaoImpl implements OrderDao {
     private Connection connection;
+
+    private final static Logger logger = Logger.getLogger(OrderDaoImpl.class.getName());
 
     public OrderDaoImpl(Connection connection) {
         this.connection = connection;
@@ -25,13 +28,14 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> findAllByStatusTitle(String statusTitle) {
         List<Order> orders = new ArrayList<>();
+        logger.info("Receiving all orders with status " + statusTitle);
 
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_ORDERS_BY_STATUS_TITLE, statusTitle));
 
             return MapOrderRelativeEntities(orders, rs);
         } catch (SQLException e) {
-            System.err.println("Couldn't get pending orders " + e.getMessage());
+            logger.info("ERROR: Couldn't get pending orders " + e.getMessage());
             return orders;
         }
     }
@@ -39,19 +43,21 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> findAllByCustomerId(Long customerId) {
         List<Order> orders = new ArrayList<>();
+        logger.info("Receiving all orders for customer " + customerId);
 
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(String.format(SQLConstants.GET_ORDERS_BY_CUSTOMER_ID, customerId));
 
             return MapOrderRelativeEntities(orders, rs);
         } catch (SQLException e) {
-            System.err.println("Couldn't get user orders " + e.getMessage());
+            logger.info("ERROR: Couldn't get user orders " + e.getMessage());
             return orders;
         }
     }
 
     @Override
     public boolean updateOrderStatus(Long orderId, Long statusId) {
+        logger.info("Updating orders(" + orderId + ") status with status" + statusId);
         try (Statement st = connection.createStatement()) {
             int affectedRows = st.executeUpdate(String.format(SQLConstants.UPDATE_ORDER_STATUS,
                                                                             statusId,
@@ -62,7 +68,7 @@ public class OrderDaoImpl implements OrderDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't update order " + e.getMessage());
+            logger.info("ERROR: Couldn't update order " + e.getMessage());
             return false;
         }
     }
@@ -97,7 +103,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean create(Order order) {
-        System.out.println();
+        logger.info("Creating order " + order.toString());
 
         try (Statement st = connection.createStatement()) {
             int affectedRows = st.executeUpdate(String.format(SQLConstants.INSERT_NEW_ORDER,
@@ -110,28 +116,19 @@ public class OrderDaoImpl implements OrderDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't insert new order " + e.getMessage());
+            logger.info("ERROR: Couldn't insert new order " + e.getMessage());
             return false;
         }
     }
 
     @Override
-    public Order findById(Long id) {
-        return null;
-    }
-
-    @Override
-    public List<Order> findAll() {
-        return null;
-    }
-
-    @Override
     public boolean update(Order entity) {
-        return false;
+        return false; //TODO: Implement order editing functionality
     }
 
     @Override
     public boolean delete(Long id) {
+        logger.info("Deleting order with id " + id);
         try (Statement st = connection.createStatement()){
             int affectedRows = st.executeUpdate(String.format(SQLConstants.DELETE_ORDER_BY_ID, id));
 
@@ -141,7 +138,7 @@ public class OrderDaoImpl implements OrderDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't delete order " + e.getMessage());
+            logger.info("ERROR: Couldn't delete order " + e.getMessage());
             return false;
         }
     }

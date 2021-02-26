@@ -9,9 +9,12 @@ import travelagency.model.TourType;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TourDaoImpl implements TourDao {
     private Connection connection;
+
+    private final static Logger logger = Logger.getLogger(TourDaoImpl.class.getName());
 
     public TourDaoImpl(Connection connection) {
         this.connection = connection;
@@ -20,7 +23,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public Tour findById(Long id) {
         Tour tour = Tour.newBuilder().build();
-
+        logger.info("Receiving tour with id " + id);
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOUR_BY_ID)) {
             st.setLong(1, id);
             ResultSet rs = st.executeQuery();
@@ -31,7 +34,7 @@ public class TourDaoImpl implements TourDao {
                 tour = tourMapper.extractFromResultSet(rs);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour " + e.getMessage());
+            logger.info("ERROR: Couldn't receive tour " + e.getMessage());
         }
 
         return tour;
@@ -40,6 +43,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public Tour findByName(String name) {
         Tour tour = Tour.newBuilder().build();
+        logger.info("Receiving tour with title " + name);
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOUR_BY_NAME)) {
             st.setString(1, name);
@@ -51,7 +55,7 @@ public class TourDaoImpl implements TourDao {
                 tour = tourMapper.extractFromResultSet(rs);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour " + e.getMessage());
+            logger.info("ERROR: Couldn't receive tour " + e.getMessage());
         }
 
         return tour;
@@ -60,6 +64,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public List<Tour> findAllByCountry(String country) {
         List<Tour> tours = new ArrayList<>();
+        logger.info("Receiving tours for " + country);
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_COUNTRY)) {
             st.setString(1, country);
@@ -72,7 +77,7 @@ public class TourDaoImpl implements TourDao {
                 tours.add(tour);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour list " + e.toString());
+            logger.info("ERROR: Couldn't receive tour list " + e.toString());
         }
 
         return tours;
@@ -81,6 +86,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public List<Tour> findAllByHotelTypeName(String hotel) {
         List<Tour> tours = new ArrayList<>();
+        logger.info("Receiving tours for " + hotel + " hotel");
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_HOTEL_NAME)) {
             st.setString(1, hotel);
@@ -93,7 +99,7 @@ public class TourDaoImpl implements TourDao {
                 tours.add(tour);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour list " + e.getMessage());
+            logger.info("ERROR: Couldn't receive tour list " + e.getMessage());
         }
 
         return tours;
@@ -102,6 +108,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public List<Tour> findAllByCountryAndHotelTypeName(String country, String hotel) {
         List<Tour> tours = new ArrayList<>();
+        logger.info("Receiving tours for " + country + " and " + hotel);
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOURS_BY_COUNTRY_AND_HOTEL)) {
             st.setString(1, country);
@@ -115,7 +122,7 @@ public class TourDaoImpl implements TourDao {
                 tours.add(tour);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour list " + e.getMessage());
+            logger.info("ERROR: Couldn't receive tour list " + e.getMessage());
         }
 
         return tours;
@@ -124,6 +131,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public List<TourType> getTourTypes() {
         List<TourType> tourTypes = new ArrayList<>();
+        logger.info("Receiving tour types");
 
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(SQLConstants.GET_ALL_TOUR_TYPES);
@@ -133,7 +141,7 @@ public class TourDaoImpl implements TourDao {
                 tourTypes.add(tourType);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour types list " + e.getMessage());
+            logger.info("ERROR: Couldn't receive tour types list " + e.getMessage());
         }
 
         return tourTypes;
@@ -142,6 +150,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public TourType getTourTypeByName(String name) {
         TourType tourType = new TourType((long) -1, "");
+        logger.info("Receiving tour type with name " + name);
 
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_TOUR_TYPE_BY_NAME)) {
             st.setString(1, name);
@@ -153,13 +162,14 @@ public class TourDaoImpl implements TourDao {
 
             return tourType;
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour type using name " + e.getMessage());
+            logger.info("ERROR: Couldn't receive tour type using name " + e.getMessage());
             return tourType;
         }
     }
 
     @Override
     public boolean setHot(Long id, Boolean condition) {
+        logger.info("Setting tour with id " + id + " as " + condition);
         try (Statement st = connection.createStatement()){
             int affectedRows = st.executeUpdate(String.format(SQLConstants.UPDATE_TOUR_HOTNESS_VALUE, condition, id));
 
@@ -169,13 +179,14 @@ public class TourDaoImpl implements TourDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't update tour " + e.getMessage());
+            logger.info("ERROR: Couldn't update tour " + e.getMessage());
             return false;
         }
     }
 
     @Override
     public boolean create(Tour tour) {
+        logger.info("Creating tour " + tour.toString());
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.INSERT_NEW_TOUR)) {
             st.setString(1, tour.getName());
             st.setString(2, tour.getDescription());
@@ -194,14 +205,14 @@ public class TourDaoImpl implements TourDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't insert new tour " + e.getMessage());
+            logger.info("ERROR: Couldn't insert new tour " + e.getMessage());
             return false;
         }
     }
 
-    @Override
     public List<Tour> findAll() {
         List<Tour> tours = new ArrayList<>();
+        logger.info("Receiving list of all tours");
 
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(SQLConstants.GET_ALL_TOURS);
@@ -213,7 +224,7 @@ public class TourDaoImpl implements TourDao {
                 tours.add(tour);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive tour list " + e.getMessage());
+            logger.info("ERROR: Couldn't receive tour list " + e.getMessage());
         }
 
         return tours;
@@ -226,6 +237,7 @@ public class TourDaoImpl implements TourDao {
 
     @Override
     public boolean delete(Long id) {
+        logger.info("Deleting tour with id " + id);
         try (Statement st = connection.createStatement()){
             int affectedRows = st.executeUpdate(String.format(SQLConstants.DELETE_TOUR_BY_ID, id));
 
@@ -235,7 +247,7 @@ public class TourDaoImpl implements TourDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't delete tour " + e.getMessage());
+            logger.info("ERROR: Couldn't delete tour " + e.getMessage());
             return false;
         }
     }

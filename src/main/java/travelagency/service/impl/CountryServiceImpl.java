@@ -7,16 +7,19 @@ import travelagency.service.CountryService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class CountryServiceImpl implements CountryService {
     DaoFactory daoFactory = DaoFactory.getInstance();
+
+    private final static Logger logger = Logger.getLogger(CountryServiceImpl.class.getName());
 
     @Override
     public List<Country> getAll() {
         try (CountryDao countryDao = daoFactory.createCountryDao()) {
             return countryDao.findAll();
         } catch (Exception exception) {
-            System.err.println("AutoClosable exception at CountryService!");
+            logger.info("ERROR: AutoClosable exception at CountryService!");
             return new ArrayList<>();
         }
     }

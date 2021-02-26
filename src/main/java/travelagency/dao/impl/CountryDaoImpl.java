@@ -11,9 +11,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class CountryDaoImpl implements CountryDao {
     private Connection connection;
+    private final static Logger logger = Logger.getLogger(CountryDaoImpl.class.getName());
+
 
     public CountryDaoImpl(Connection connection) {
         this.connection = connection;
@@ -22,6 +25,7 @@ public class CountryDaoImpl implements CountryDao {
     @Override
     public List<Country> findAll() {
         List<Country> countries = new ArrayList<>();
+        logger.info("Receiving list of countries");
 
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(SQLConstants.GET_ALL_COUNTRIES);
@@ -31,7 +35,7 @@ public class CountryDaoImpl implements CountryDao {
                 countries.add(country);
             }
         } catch (SQLException e) {
-            System.err.println("Couldn't receive countries list " + e.getMessage());
+            logger.info("ERROR: Couldn't receive countries list " + e.getMessage());
         }
 
         return countries;

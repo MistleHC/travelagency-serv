@@ -4,9 +4,12 @@ import travelagency.model.User;
 import travelagency.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.logging.Logger;
 
 public class LoginCommand implements Command {
     private final UserService userService;
+
+    private final static Logger logger = Logger.getLogger(LoginCommand.class.getName());
 
     public LoginCommand(UserService userService) {
         this.userService = userService;
@@ -35,7 +38,7 @@ public class LoginCommand implements Command {
         if (currentUser.getPassword().equals(password) && currentUser.getEmail().equals(email)) {
             request.getSession().setAttribute("authUser", currentUser);
 
-            System.out.println("Logged in user is: " + request.getSession().getAttribute("authUser").toString());
+            logger.info("Logged in user is: " + request.getSession().getAttribute("authUser").toString());
         }
 
         return "redirect:/home";

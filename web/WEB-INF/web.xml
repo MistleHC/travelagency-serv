@@ -52,10 +52,13 @@
     </jsp-config>
 
     <listener>
-        <listener-class>
-            travelagency.controller.listener.SessionListener
-        </listener-class>
+        <listener-class>travelagency.controller.listener.SessionListener</listener-class>
     </listener>
+
+    <context-param>
+        <param-name>log4j-config-location</param-name>
+        <param-value>WEB-INF\log4j.properties</param-value>
+    </context-param>
 
     <error-page>
         <exception-type>java.lang.Exception</exception-type>

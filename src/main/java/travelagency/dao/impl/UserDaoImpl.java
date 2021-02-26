@@ -7,11 +7,12 @@ import travelagency.dao.mapper.UserMapper;
 import travelagency.model.User;
 
 import java.sql.*;
-import java.util.List;
-import java.util.Objects;
+import java.util.logging.Logger;
 
 public class UserDaoImpl implements UserDao {
     private Connection connection;
+
+    private final static Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
 
     public UserDaoImpl(Connection connection) {
         this.connection = connection;
@@ -37,10 +38,11 @@ public class UserDaoImpl implements UserDao {
             }
 
             user = getUserRole(user);
+            logger.info("User with email " + email + " was received");
 
             return user;
         } catch (SQLException e) {
-            System.err.println("Couldn't find user " + e.getMessage());
+            logger.info("ERROR: Couldn't find user - " + e.getMessage());
         }
 
         return user;
@@ -48,7 +50,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean create(User user) {
-        System.out.println("Adding: " + user.toString());
+        logger.info("Adding: " + user.toString());
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.INSERT_USER_WITH_NAME_EMAIL_PW)) {
             connection.setAutoCommit(false);
 
@@ -73,24 +75,15 @@ public class UserDaoImpl implements UserDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't add user or role " + e.getMessage());
+            logger.info("ERROR: Couldn't add user or role - " + e.getMessage());
             doRollback(connection);
             return false;
         }
     }
 
     @Override
-    public User findById(Long id) {
-        return null;
-    }
-
-    @Override
-    public List<User> findAll() {
-        return null;
-    }
-
-    @Override
     public boolean update(User user) {
+        logger.info("Updating user: " + user.toString());
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.UPDATE_USER_ADDITIONAL_INFO)) {
             st.setString(1, user.getAboutMe());
             st.setString(2, user.getFullName());
@@ -103,14 +96,14 @@ public class UserDaoImpl implements UserDao {
 
             return true;
         } catch (SQLException e) {
-            System.err.println("Couldn't update user " + e.getMessage());
+            logger.info("ERROR: Couldn't update user " + e.getMessage());
             return false;
         }
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        return false; //TODO: Implement user deletion.
     }
 
     @Override
@@ -123,7 +116,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     private boolean setUserRole(User user, int roleId) throws SQLException {
-        System.out.println("Adding users role");
+        logger.info("Adding role with id " + roleId);
         try (Statement st = connection.createStatement()) {
             st.executeUpdate(String.format(SQLConstants.INSERT_ROLE_FOR_USER, user.getId(), roleId));
             return true;
@@ -131,6 +124,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     private User getUserRole(User user) throws SQLException {
+        logger.info("Receiving user roles, users email - " + user.getEmail());
         try (Statement stm = connection.createStatement()) {
             ResultSet rsTwo = stm.executeQuery(String.format(SQLConstants.GET_USER_ROLE_BY_USER_ID, user.getId()));
 
@@ -146,7 +140,7 @@ public class UserDaoImpl implements UserDao {
         try {
             connection.rollback();
         } catch (SQLException e) {
-            System.err.println("Rollback error occurred");
+            logger.info("ERROR: Rollback error occurred");
         }
     }
 }

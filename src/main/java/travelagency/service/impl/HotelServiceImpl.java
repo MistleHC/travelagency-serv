@@ -7,16 +7,19 @@ import travelagency.service.HotelService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class HotelServiceImpl implements HotelService {
     DaoFactory daoFactory = DaoFactory.getInstance();
+
+    private final static Logger logger = Logger.getLogger(HotelServiceImpl.class.getName());
 
     @Override
     public List<HotelType> getAll() {
         try (HotelDao hotelDao = daoFactory.createHotelDao()) {
             return hotelDao.findAll();
         } catch (Exception exception) {
-            System.err.println("AutoClosable exception at HotelService!");
+            logger.info("ERROR: AutoClosable exception at HotelService!");
             return new ArrayList<>();
         }
     }

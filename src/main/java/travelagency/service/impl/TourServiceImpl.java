@@ -11,10 +11,13 @@ import travelagency.service.TourService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class TourServiceImpl implements TourService {
     DaoFactory daoFactory = DaoFactory.getInstance();
+
+    private final static Logger logger = Logger.getLogger(TourServiceImpl.class.getName());
 
 
     @Override
@@ -95,7 +98,7 @@ public class TourServiceImpl implements TourService {
 
             return tourDao.create(tour);
         } catch (Exception exception) {
-            System.err.println("Error with AutoClosable at TourService!");
+            logger.info("ERROR: Error with AutoClosable at TourService!");
             return false;
         }
     }
