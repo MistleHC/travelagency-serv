@@ -25,7 +25,6 @@ public class UserDaoImpl implements UserDao {
         try (PreparedStatement st = connection.prepareStatement(SQLConstants.GET_USER_BY_EMAIL)) {
             st.setString(1, email);
 
-            System.out.println("1: " + st);
             ResultSet rs = st.executeQuery();
 
             UserMapper userMapper = new UserMapper();
