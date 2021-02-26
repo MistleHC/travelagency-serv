@@ -33,7 +33,7 @@ public class SQLConstants {
     //=================================================================================================================
 
     public static final String GET_ORDERS_BY_CUSTOMER_ID =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot, " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot, " +
                         "ord.id AS order_id, ord.customer_id AS order_customer_id, st.id AS status_id, st.title AS status_title, " +
                         "us.id AS user_id, us.email AS user_email, us.name AS user_name " +
                     "FROM tours AS t " +
@@ -45,7 +45,7 @@ public class SQLConstants {
                     "WHERE ord.customer_id = %s;";
 
     public static final String GET_ORDERS_BY_STATUS_TITLE =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot, " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot, " +
                         "ord.id AS order_id, ord.customer_id AS order_customer_id, st.id AS status_id, st.title AS status_title, " +
                         "us.id AS user_id, us.email AS user_email, us.name AS user_name " +
                     "FROM tours AS t " +
@@ -74,46 +74,46 @@ public class SQLConstants {
     //=================================================================================================================
 
     public static final String GET_TOURS_BY_COUNTRY =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
                     "WHERE t.country LIKE ? LIMIT ? OFFSET ?";
 
     public static final String GET_TOURS_BY_HOTEL_NAME =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
                     "WHERE ht.name LIKE ? LIMIT ? OFFSET ?";
 
     public static final String GET_TOURS_BY_COUNTRY_AND_HOTEL =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
                     "WHERE t.country LIKE ? AND ht.name LIKE ? LIMIT ? OFFSET ?";
 
     public static final String GET_ALL_TOURS =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
                     "ORDER BY t.is_hot DESC LIMIT ? OFFSET ?";
 
     public static final String INSERT_NEW_TOUR =
-                    "INSERT INTO tours (name, description, country, peoples, hotel_type_id, tour_type_id, price, is_hot) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                    "INSERT INTO tours (name, description, country, peoples, hotel_type_id, tour_type_id, price, is_hot, discount) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     public static final String GET_TOUR_BY_ID =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +
                     "WHERE t.id = ?;";
 
     public static final String GET_TOUR_BY_NAME =
-                    "SELECT t.id, t.name, t.description, t.country, t.peoples, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
+                    "SELECT t.id, t.name, t.description, t.country, t.peoples, t.discount, ht.name AS hotel_type, tt.name AS tour_type, t.price, t.is_hot " +
                     "FROM tours AS t " +
                     "INNER JOIN hotel_types AS ht ON t.hotel_type_id = ht.id " +
                     "INNER JOIN tour_types AS tt ON t.tour_type_id = tt.id " +

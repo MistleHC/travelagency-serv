@@ -222,6 +222,7 @@ public class TourDaoImpl implements TourDao {
             st.setLong(6, tour.getTourType().getId());
             st.setLong(7, tour.getPrice());
             st.setBoolean(8, false);
+            st.setLong(9, tour.getDiscount());
 
             int affectedRows = st.executeUpdate();
 

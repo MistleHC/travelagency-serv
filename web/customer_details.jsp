@@ -41,6 +41,7 @@
                         <th scope="col"><fmt:message key="profile.o.name" /></th>
                         <th scope="col"><fmt:message key="profile.o.type" /></th>
                         <th scope="col"><fmt:message key="profile.o.hotel" /></th>
+                        <th scope="col"><fmt:message key="profile.o.price" /></th>
                         <th scope="col"><fmt:message key="profile.o.status" /></th>
                         <th scope="col"><fmt:message key="profile.o.actions" /></th>
                     </tr>
@@ -57,6 +58,9 @@
                             </td>
                             <td>
                                     ${order.tour.hotelType.name}
+                            </td>
+                            <td>
+                                    ${order.tour.price - (order.tour.price * order.tour.discount / 100)} UAH
                             </td>
                             <td>
                                     ${order.status.title}

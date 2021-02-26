@@ -19,6 +19,7 @@ public class TourMapper {
                 .setTourType(new TourType((long) -1, rs.getString("tour_type")))
                 .setPrice(rs.getLong("price"))
                 .setHot(rs.getBoolean("is_hot"))
+                .setDiscount(rs.getLong("discount"))
                 .build();
     }
 }

@@ -28,6 +28,7 @@
                         <th scope="col"><fmt:message key="man.customer.id" /></th>
                         <th scope="col"><fmt:message key="man.customer.login" /></th>
                         <th scope="col"><fmt:message key="man.tour.name" /></th>
+                        <th scope="col"><fmt:message key="profile.o.price" /></th>
                         <th scope="col"><fmt:message key="man.actions" /></th>
                     </tr>
                     <c:forEach items="${sessionScope.orders}" var="order">
@@ -43,6 +44,9 @@
                             </td>
                             <td>
                                     ${order.tour.name}
+                            </td>
+                            <td>
+                                    ${order.tour.price - (order.tour.price * order.tour.discount / 100)} UAH
                             </td>
                             <td>
                                 <div class="card-body row no-gutters align-items-center">

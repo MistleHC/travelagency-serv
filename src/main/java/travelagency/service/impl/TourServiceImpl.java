@@ -92,6 +92,7 @@ public class TourServiceImpl implements TourService {
                     .setPeoples(tourCreationDto.getTourSize())
                     .setPrice(tourCreationDto.getTourPrice())
                     .setHot(false)
+                    .setDiscount((long) 0)
                     .setHotelType(hotelDao.getByName(tourCreationDto.getTourHotel()))
                     .setTourType(tourDao.getTourTypeByName(tourCreationDto.getTourType()))
                     .build();

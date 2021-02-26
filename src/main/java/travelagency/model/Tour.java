@@ -13,6 +13,7 @@ public class Tour {
     private String country;
     private Long peoples;
     private Long price;
+    private Long discount;
     private boolean isHot;
     private HotelType hotelType;
     private TourType tourType;
@@ -60,6 +61,12 @@ public class Tour {
 
         public Tour.Builder setPrice(Long price) {
             Tour.this.price = price;
+
+            return this;
+        }
+
+        public Tour.Builder setDiscount(Long discount) {
+            Tour.this.discount = discount;
 
             return this;
         }
@@ -122,6 +129,8 @@ public class Tour {
     public TourType getTourType() {
         return tourType;
     }
+
+    public Long getDiscount() { return discount; }
 
     @Override
     public boolean equals(Object o) {

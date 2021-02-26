@@ -153,7 +153,7 @@
                                             </div>
                                             <div class="product-desc">
                                                 <span class="product-price">
-                                                        ${tour.price} UAH
+                                                        ${tour.price - (tour.price * tour.discount / 100)} UAH
                                                 </span>
                                                 <h4 class="pro-name">${tour.name}</h4><br>
                                                 <p class="prod-name"><fmt:message key="create.type" /> ${tour.tourType.name}</p>
@@ -161,7 +161,7 @@
                                                 <p class="prod-name"><fmt:message key="create.group" /> ${tour.peoples}</p><br>
                                                 <p class="prod-name">${tour.description}</p><br>
                                                 <p class="prod-name"></p>
-                                                <p class="prod-name"><fmt:message key="create.price" /> ${tour.price}</p>
+                                                <p class="prod-name"><fmt:message key="create.price" /> ${tour.price - (tour.price * tour.discount / 100)}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -218,7 +218,7 @@
                             </div>
                             <div class="product-desc">
                     <span class="product-price">
-                            ${tour.price} UAH
+                            ${tour.price - (tour.price * tour.discount / 100)} UAH
                     </span>
                                 <small class="text-muted">${tour.tourType.name}</small>
                                 <a href="#" data-toggle="modal" data-target="#modal${tour.id}" class="product-name">${tour.name}</a>
