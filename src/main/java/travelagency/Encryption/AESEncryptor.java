@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,6 +13,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class AESEncryptor {
     private static SecretKeySpec secretKey;
     private static byte[] key;
+
+    private final static Logger logger = Logger.getLogger(AESEncryptor.class.getName());
 
     public static void setKey(String myKey) {
         MessageDigest sha = null;
@@ -22,7 +25,7 @@ public class AESEncryptor {
             key = Arrays.copyOf(key, 16);
             secretKey = new SecretKeySpec(key, "AES");
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            System.err.println("Error while setting key: " + e.toString());
+            logger.info("ERROR: while setting key: " + e.toString());
         }
     }
 
@@ -33,7 +36,7 @@ public class AESEncryptor {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
         } catch (Exception e) {
-            System.err.println("Error while encrypting: " + e.toString());
+            logger.info("ERROR: while encrypting: " + e.toString());
         }
         return null;
     }
@@ -45,7 +48,7 @@ public class AESEncryptor {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
         } catch (Exception e) {
-            System.err.println("Error while decrypting: " + e.toString());
+            logger.info("ERROR: while decrypting: " + e.toString());
         }
         return null;
     }

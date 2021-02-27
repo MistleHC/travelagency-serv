@@ -25,7 +25,7 @@ body {
     margin-right: 10px;
 }
 .inf-btn {
-    float: right;
+    margin-left: auto;
 }
 .item-row {
     margin-top: 15px;
